@@ -179,7 +179,8 @@
 resource "aws_network_interface" "node_1_interface" {
   subnet_id               = var.private_subnet_1 #data.aws_subnet.data.subnet_id
   private_ips_count       = 2
-  security_groups         = [var.domain_member_sgids,aws_security_group.wsfc_sg.id,aws_security_group.wsfc_client_sg.id]
+  # security_groups         = [var.domain_member_sgids,aws_security_group.wsfc_sg.id,aws_security_group.wsfc_client_sg.id]
+  security_groups         =  ["sg-00a393af1bbc6d079"]
 #   private_ips = ["10.10.130.180"]
   tags                    = merge(
     {
