@@ -20,56 +20,56 @@ resource "aws_security_group" "fsx_sg" {
     from_port        = 53
     to_port          = 53
     protocol         = "tcp"
-    security_groups      = ["sg-00a393af1bbc6d079"]]
+    security_groups      = ["sg-00a393af1bbc6d079"]
   }
 
   ingress {
     from_port        = 53
     to_port          = 53
     protocol         = "udp"
-    security_groups      = ["sg-00a393af1bbc6d079"]]
+    security_groups      = ["sg-00a393af1bbc6d079"]
   }
 
   ingress {
     from_port        = 49152
     to_port          = 65535
     protocol         = "udp"
-    security_groups      = ["sg-00a393af1bbc6d079"]]
+    security_groups      = ["sg-00a393af1bbc6d079"]
   }
 
   ingress {
     from_port        = 49152
     to_port          = 65535
     protocol         = "tcp"
-    security_groups      = ["sg-00a393af1bbc6d079"]]
+    security_groups      = ["sg-00a393af1bbc6d079"]
   }
 
   ingress {
     from_port        = 88
     to_port          = 88
     protocol         = "tcp"
-    security_groups      = ["sg-00a393af1bbc6d079"]]
+    security_groups      = ["sg-00a393af1bbc6d079"]
   }
 
   ingress {
     from_port        = 88
     to_port          = 88
     protocol         = "udp"
-    security_groups      = ["sg-00a393af1bbc6d079"]]
+    security_groups      = ["sg-00a393af1bbc6d079"]
   }
 
   ingress {
     from_port        = 445
     to_port          = 445
     protocol         = "tcp"
-    security_groups      = ["sg-00a393af1bbc6d079"]]
+    security_groups      = ["sg-00a393af1bbc6d079"]
   }
 
   ingress {
     from_port        = 445
     to_port          = 445
     protocol         = "udp"
-    security_groups      = ["sg-00a393af1bbc6d079"]]
+    security_groups      = ["sg-00a393af1bbc6d079"]
   }
 
   ingress {
@@ -83,14 +83,14 @@ resource "aws_security_group" "fsx_sg" {
     from_port        = 389
     to_port          = 389
     protocol         = "udp"
-    security_groups      = ["sg-00a393af1bbc6d079"]]
+    security_groups      = ["sg-00a393af1bbc6d079"]
   }
 
   ingress {
     from_port        = 636
     to_port          = 636
     protocol         = "tcp"
-    security_groups      = ["sg-00a393af1bbc6d079"]]
+    security_groups      = ["sg-00a393af1bbc6d079"]
   }
 
   tags                    = merge(
