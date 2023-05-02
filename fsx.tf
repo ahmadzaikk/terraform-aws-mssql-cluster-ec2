@@ -76,7 +76,7 @@ resource "aws_security_group" "fsx_sg" {
     from_port        = 389
     to_port          = 389
     protocol         = "tcp"
-    security_groups      = [var.domain_member_sgids]
+    security_groups      = ["sg-00a393af1bbc6d079"]
   }
 
   ingress {
