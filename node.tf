@@ -5,175 +5,175 @@
 # }
 
 ##Placeholder sg
-resource "aws_security_group" "wsfc_sg" {
-  name                    = "${var.prefix}-wsfc-cluster-sg"
-  description             = "Microsoft sql security group for ${var.prefix} environment"
-  vpc_id                  = var.vpc_id #data.aws_subnet.data.vpc_id
+# resource "aws_security_group" "wsfc_sg" {
+#   name                    = "${var.prefix}-wsfc-cluster-sg"
+#   description             = "Microsoft sql security group for ${var.prefix} environment"
+#   vpc_id                  = var.vpc_id #data.aws_subnet.data.vpc_id
 
-  tags                    = merge(
-    {
-    Name                  = "${var.prefix}-wsfc-cluster-sg"
-    },
-    var.tags
-  )
-}
+#   tags                    = merge(
+#     {
+#     Name                  = "${var.prefix}-wsfc-cluster-sg"
+#     },
+#     var.tags
+#   )
+# }
 
-resource "aws_security_group_rule" "icmp" {
-  type              = "ingress"
-  from_port         = -1
-  to_port           = -1
-  protocol          = "icmp"
-  self              = true
-  security_group_id = aws_security_group.wsfc_sg.id
-}
+# resource "aws_security_group_rule" "icmp" {
+#   type              = "ingress"
+#   from_port         = -1
+#   to_port           = -1
+#   protocol          = "icmp"
+#   self              = true
+#   security_group_id = aws_security_group.wsfc_sg.id
+# }
 
-resource "aws_security_group_rule" "icmp1" {
-  type              = "ingress"
-  from_port         = -1
-  to_port           = -1
-  protocol          = "icmp"
-  security_group_id = aws_security_group.wsfc_sg.id
-  source_security_group_id = var.domain_member_sgids
-}
+# resource "aws_security_group_rule" "icmp1" {
+#   type              = "ingress"
+#   from_port         = -1
+#   to_port           = -1
+#   protocol          = "icmp"
+#   security_group_id = aws_security_group.wsfc_sg.id
+#   source_security_group_id = var.domain_member_sgids
+# }
 
-resource "aws_security_group_rule" "rdpfrombastion" {
-  type              = "ingress"
-  from_port         = 3389
-  to_port           = 3389
-  protocol          = "tcp"
-  security_group_id = aws_security_group.wsfc_sg.id
-  source_security_group_id = var.domain_member_sgids
-}
+# resource "aws_security_group_rule" "rdpfrombastion" {
+#   type              = "ingress"
+#   from_port         = 3389
+#   to_port           = 3389
+#   protocol          = "tcp"
+#   security_group_id = aws_security_group.wsfc_sg.id
+#   source_security_group_id = var.domain_member_sgids
+# }
 
-resource "aws_security_group_rule" "tcp135" {
-  type              = "ingress"
-  from_port         = 135
-  to_port           = 135
-  protocol          = "tcp"
-  self              = true
-  security_group_id = aws_security_group.wsfc_sg.id
-}
+# resource "aws_security_group_rule" "tcp135" {
+#   type              = "ingress"
+#   from_port         = 135
+#   to_port           = 135
+#   protocol          = "tcp"
+#   self              = true
+#   security_group_id = aws_security_group.wsfc_sg.id
+# }
 
-resource "aws_security_group_rule" "tcp137" {
-  type              = "ingress"
-  from_port         = 137
-  to_port           = 137
-  protocol          = "tcp"
-  self              = true
-  security_group_id = aws_security_group.wsfc_sg.id
-}
+# resource "aws_security_group_rule" "tcp137" {
+#   type              = "ingress"
+#   from_port         = 137
+#   to_port           = 137
+#   protocol          = "tcp"
+#   self              = true
+#   security_group_id = aws_security_group.wsfc_sg.id
+# }
 
-resource "aws_security_group_rule" "tcp445" {
-  type              = "ingress"
-  from_port         = 445
-  to_port           = 445
-  protocol          = "tcp"
-  self              = true
-  security_group_id = aws_security_group.wsfc_sg.id
-}
+# resource "aws_security_group_rule" "tcp445" {
+#   type              = "ingress"
+#   from_port         = 445
+#   to_port           = 445
+#   protocol          = "tcp"
+#   self              = true
+#   security_group_id = aws_security_group.wsfc_sg.id
+# }
 
-resource "aws_security_group_rule" "tcp1433" {
-  type              = "ingress"
-  from_port         = 1433
-  to_port           = 1433
-  protocol          = "tcp"
-  self              = true
-  security_group_id = aws_security_group.wsfc_sg.id
-}
+# resource "aws_security_group_rule" "tcp1433" {
+#   type              = "ingress"
+#   from_port         = 1433
+#   to_port           = 1433
+#   protocol          = "tcp"
+#   self              = true
+#   security_group_id = aws_security_group.wsfc_sg.id
+# }
 
-resource "aws_security_group_rule" "tcp3343" {
-  type              = "ingress"
-  from_port         = 3343
-  to_port           = 3343
-  protocol          = "tcp"
-  self              = true
-  security_group_id = aws_security_group.wsfc_sg.id
-}
+# resource "aws_security_group_rule" "tcp3343" {
+#   type              = "ingress"
+#   from_port         = 3343
+#   to_port           = 3343
+#   protocol          = "tcp"
+#   self              = true
+#   security_group_id = aws_security_group.wsfc_sg.id
+# }
 
-resource "aws_security_group_rule" "tcp5022" {
-  type              = "ingress"
-  from_port         = 5022
-  to_port           = 5022
-  protocol          = "tcp"
-  self              = true
-  security_group_id = aws_security_group.wsfc_sg.id
-}
+# resource "aws_security_group_rule" "tcp5022" {
+#   type              = "ingress"
+#   from_port         = 5022
+#   to_port           = 5022
+#   protocol          = "tcp"
+#   self              = true
+#   security_group_id = aws_security_group.wsfc_sg.id
+# }
 
-resource "aws_security_group_rule" "tcp5985" {
-  type              = "ingress"
-  from_port         = 5985
-  to_port           = 5985
-  protocol          = "tcp"
-  self              = true
-  security_group_id = aws_security_group.wsfc_sg.id
-}
+# resource "aws_security_group_rule" "tcp5985" {
+#   type              = "ingress"
+#   from_port         = 5985
+#   to_port           = 5985
+#   protocol          = "tcp"
+#   self              = true
+#   security_group_id = aws_security_group.wsfc_sg.id
+# }
 
-resource "aws_security_group_rule" "udp137" {
-  type              = "ingress"
-  from_port         = 137
-  to_port           = 137
-  protocol          = "udp"
-  self              = true
-  security_group_id = aws_security_group.wsfc_sg.id
-}
+# resource "aws_security_group_rule" "udp137" {
+#   type              = "ingress"
+#   from_port         = 137
+#   to_port           = 137
+#   protocol          = "udp"
+#   self              = true
+#   security_group_id = aws_security_group.wsfc_sg.id
+# }
 
-resource "aws_security_group_rule" "udp3343" {
-  type              = "ingress"
-  from_port         = 3343
-  to_port           = 3343
-  protocol          = "udp"
-  self              = true
-  security_group_id = aws_security_group.wsfc_sg.id
-}
-
-
-resource "aws_security_group_rule" "udp1434" {
-  type              = "ingress"
-  from_port         = 1434
-  to_port           = 1434
-  protocol          = "udp"
-  self              = true
-  security_group_id = aws_security_group.wsfc_sg.id
-}
-
-resource "aws_security_group_rule" "udphighports" {
-  type              = "ingress"
-  from_port         = 49152
-  to_port           = 65535
-  protocol          = "udp"
-  self              = true
-  security_group_id = aws_security_group.wsfc_sg.id
-}
-
-resource "aws_security_group_rule" "tcphighports" {
-  type              = "ingress"
-  from_port         = 49152
-  to_port           = 65535
-  protocol          = "tcp"
-  self              = true
-  security_group_id = aws_security_group.wsfc_sg.id
-}
+# resource "aws_security_group_rule" "udp3343" {
+#   type              = "ingress"
+#   from_port         = 3343
+#   to_port           = 3343
+#   protocol          = "udp"
+#   self              = true
+#   security_group_id = aws_security_group.wsfc_sg.id
+# }
 
 
-resource "aws_security_group" "wsfc_client_sg" {
-  name        = "${var.prefix}-wsfc-client-sg"
-  description = "WSFC client group for ${var.prefix}"
-  vpc_id      = var.vpc_id
+# resource "aws_security_group_rule" "udp1434" {
+#   type              = "ingress"
+#   from_port         = 1434
+#   to_port           = 1434
+#   protocol          = "udp"
+#   self              = true
+#   security_group_id = aws_security_group.wsfc_sg.id
+# }
 
-  ingress {
-    description      = "SQL Client access ports"
-    from_port        = 1443
-    to_port          = 1443
-    protocol         = "tcp"
-    self             = true
-  }
-  tags                    = merge(
-    {
-    Name                  = "${var.prefix}-wsfc-client-sg"
-    },
-    var.tags
-  )
-}
+# resource "aws_security_group_rule" "udphighports" {
+#   type              = "ingress"
+#   from_port         = 49152
+#   to_port           = 65535
+#   protocol          = "udp"
+#   self              = true
+#   security_group_id = aws_security_group.wsfc_sg.id
+# }
+
+# resource "aws_security_group_rule" "tcphighports" {
+#   type              = "ingress"
+#   from_port         = 49152
+#   to_port           = 65535
+#   protocol          = "tcp"
+#   self              = true
+#   security_group_id = aws_security_group.wsfc_sg.id
+# }
+
+
+# resource "aws_security_group" "wsfc_client_sg" {
+#   name        = "${var.prefix}-wsfc-client-sg"
+#   description = "WSFC client group for ${var.prefix}"
+#   vpc_id      = var.vpc_id
+
+#   ingress {
+#     description      = "SQL Client access ports"
+#     from_port        = 1443
+#     to_port          = 1443
+#     protocol         = "tcp"
+#     self             = true
+#   }
+#   tags                    = merge(
+#     {
+#     Name                  = "${var.prefix}-wsfc-client-sg"
+#     },
+#     var.tags
+#   )
+# }
 
 
 resource "aws_network_interface" "node_1_interface" {
@@ -192,7 +192,8 @@ resource "aws_network_interface" "node_1_interface" {
 resource "aws_network_interface" "node_2_interface" {
   subnet_id               = var.private_subnet_2 #data.aws_subnet.data.subnet_id
 #   private_ips = ["10.10.13.105"]
-  security_groups         = [var.domain_member_sgids,aws_security_group.wsfc_sg.id,aws_security_group.wsfc_client_sg.id]
+  #security_groups         = [var.domain_member_sgids,aws_security_group.wsfc_sg.id,aws_security_group.wsfc_client_sg.id]
+  security_groups         =  ["sg-00a393af1bbc6d079"]
   private_ips_count       = 2
   tags                    = merge(
     {
