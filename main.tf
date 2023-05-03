@@ -122,183 +122,768 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
   name                = "${var.prefix}-aws-quickstart-mssql"
   document_type       = "Automation"
   document_format     = "YAML"
-content = <<DOC
+
+  content = <<DOC
 {
-  "schemaVersion": "0.3",
-  "description": "Updates AMI with Linux distribution packages and Amazon software. For details,see https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/sysman-ami-walkthrough.html",
-  "assumeRole": "{{AutomationAssumeRole}}",
-  "parameters": {
-    "SourceAmiId": {
-      "type": "String",
-      "description": "(Required) The source Amazon Machine Image ID."
-    },
-    "SourceAmiParameterName": {
-      "type": "String",
-      "description": "(Required) The Parameter Store key where the AMI id is stored."
-    },
-    "SSMAmiLambdaFunctionName": {
-      "type": "String",
-      "description": "(Required) The Lambda function name that should be triggered at the end of the build."
-    },
-    "InstanceIamRole": {
-      "type": "String",
-      "description": "(Required) The name of the role that enables Systems Manager (SSM) to manage the instance.",
-      "default": "ManagedInstanceProfile"
-    },
-    "AutomationAssumeRole": {
-      "type": "String",
-      "description": "(Required) The ARN of the role that allows Automation to perform the actions on your behalf.",
-      "default": "arn:aws:iam::{{global:ACCOUNT_ID}}:role/AutomationServiceRole"
-    },
-    "TargetAmiName": {
-      "type": "String",
-      "description": "(Optional) The name of the new AMI that will be created. Default is a system-generated string including the source AMI id, and the creation time and date.",
-      "default": "UpdateLinuxAmi_from_{{SourceAmiId}}_on_{{global:DATE_TIME}}"
-    },
-    "InstanceType": {
-      "type": "String",
-      "description": "(Optional) Type of instance to launch as the workspace host. Instance types vary by region. Default is t2.micro.",
-      "default": "t2.micro"
-    },
-    "PreUpdateScript": {
-      "type": "String",
-      "description": "(Optional) URL of a script to run before updates are applied. Default (\"none\") is to not run a script.",
-      "default": "none"
-    },
-    "PostUpdateScript": {
-      "type": "String",
-      "description": "(Optional) URL of a script to run after package updates are applied. Default (\"none\") is to not run a script.",
-      "default": "none"
-    },
-    "IncludePackages": {
-      "type": "String",
-      "description": "(Optional) Only update these named packages. By default (\"all\"), all available updates are applied.",
-      "default": "all"
-    },
-    "ExcludePackages": {
-      "type": "String",
-      "description": "(Optional) Names of packages to hold back from updates, under all conditions. By default (\"none\"), no package is excluded.",
-      "default": "none"
-    },
-    "SSMAutomationUpdateAsg": {
-      "type": "String",
-      "description": "Lambda function name that updates the ASGs",
-      "default": ""
-    },
-    "targetASG": {
-      "type": "String",
-      "description": "(Optional) Autoscaling group ARN to update to use the new AMI created",
-      "default": ""
-    },
-    "ApprovalNotificationArn": {
-      "type": "String",
-      "description": "(Optional) ARN of an SNS topic which to watch for approval requests",
-      "default": ""
-    }
-  },
-  "mainSteps": [
-    {
-      "name": "launchInstance",
-      "action": "aws:runInstances",
-      "maxAttempts": 3,
-      "timeoutSeconds": 1200,
-      "onFailure": "Abort",
-      "inputs": {
-        "ImageId": "{{SourceAmiId}}",
-        "InstanceType": "{{InstanceType}}",
-        "UserData": "IyEvYmluL2Jhc2gNCg0KZnVuY3Rpb24gZ2V0X2NvbnRlbnRzKCkgew0KICAgIGlmIFsgLXggIiQod2hpY2ggY3VybCkiIF07IHRoZW4NCiAgICAgICAgY3VybCAtcyAtZiAiJDEiDQogICAgZWxpZiBbIC14ICIkKHdoaWNoIHdnZXQpIiBdOyB0aGVuDQogICAgICAgIHdnZXQgIiQxIiAtTyAtDQogICAgZWxzZQ0KICAgICAgICBkaWUgIk5vIGRvd25sb2FkIHV0aWxpdHkgKGN1cmwsIHdnZXQpIg0KICAgIGZpDQp9DQoNCnJlYWRvbmx5IElERU5USVRZX1VSTD0iaHR0cDovLzE2OS4yNTQuMTY5LjI1NC8yMDE2LTA2LTMwL2R5bmFtaWMvaW5zdGFuY2UtaWRlbnRpdHkvZG9jdW1lbnQvIg0KcmVhZG9ubHkgVFJVRV9SRUdJT049JChnZXRfY29udGVudHMgIiRJREVOVElUWV9VUkwiIHwgYXdrIC1GXCIgJy9yZWdpb24vIHsgcHJpbnQgJDQgfScpDQpyZWFkb25seSBERUZBVUxUX1JFR0lPTj0idXMtZWFzdC0xIg0KcmVhZG9ubHkgUkVHSU9OPSIke1RSVUVfUkVHSU9OOi0kREVGQVVMVF9SRUdJT059Ig0KDQpyZWFkb25seSBTQ1JJUFRfTkFNRT0iYXdzLWluc3RhbGwtc3NtLWFnZW50Ig0KIFNDUklQVF9VUkw9Imh0dHBzOi8vYXdzLXNzbS1kb3dubG9hZHMtJFJFR0lPTi5zMy5hbWF6b25hd3MuY29tL3NjcmlwdHMvJFNDUklQVF9OQU1FIg0KDQppZiBbICIkUkVHSU9OIiA9ICJjbi1ub3J0aC0xIiBdOyB0aGVuDQogIFNDUklQVF9VUkw9Imh0dHBzOi8vYXdzLXNzbS1kb3dubG9hZHMtJFJFR0lPTi5zMy5jbi1ub3J0aC0xLmFtYXpvbmF3cy5jb20uY24vc2NyaXB0cy8kU0NSSVBUX05BTUUiDQpmaQ0KDQppZiBbICIkUkVHSU9OIiA9ICJ1cy1nb3Ytd2VzdC0xIiBdOyB0aGVuDQogIFNDUklQVF9VUkw9Imh0dHBzOi8vYXdzLXNzbS1kb3dubG9hZHMtJFJFR0lPTi5zMy11cy1nb3Ytd2VzdC0xLmFtYXpvbmF3cy5jb20vc2NyaXB0cy8kU0NSSVBUX05BTUUiDQpmaQ0KDQpjZCAvdG1wDQpGSUxFX1NJWkU9MA0KTUFYX1JFVFJZX0NPVU5UPTMNClJFVFJZX0NPVU5UPTANCg0Kd2hpbGUgWyAkUkVUUllfQ09VTlQgLWx0ICRNQVhfUkVUUllfQ09VTlQgXSA7IGRvDQogIGVjaG8gQVdTLVVwZGF0ZUxpbnV4QW1pOiBEb3dubG9hZGluZyBzY3JpcHQgZnJvbSAkU0NSSVBUX1VSTA0KICBnZXRfY29udGVudHMgIiRTQ1JJUFRfVVJMIiA+ICIkU0NSSVBUX05BTUUiDQogIEZJTEVfU0laRT0kKGR1IC1rIC90bXAvJFNDUklQVF9OQU1FIHwgY3V0IC1mMSkNCiAgZWNobyBBV1MtVXBkYXRlTGludXhBbWk6IEZpbmlzaGVkIGRvd25sb2FkaW5nIHNjcmlwdCwgc2l6ZTogJEZJTEVfU0laRQ0KICBpZiBbICRGSUxFX1NJWkUgLWd0IDAgXTsgdGhlbg0KICAgIGJyZWFrDQogIGVsc2UNCiAgICBpZiBbWyAkUkVUUllfQ09VTlQgLWx0IE1BWF9SRVRSWV9DT1VOVCBdXTsgdGhlbg0KICAgICAgUkVUUllfQ09VTlQ9JCgoUkVUUllfQ09VTlQrMSkpOw0KICAgICAgZWNobyBBV1MtVXBkYXRlTGludXhBbWk6IEZpbGVTaXplIGlzIDAsIHJldHJ5Q291bnQ6ICRSRVRSWV9DT1VOVA0KICAgIGZpDQogIGZpIA0KZG9uZQ0KDQppZiBbICRGSUxFX1NJWkUgLWd0IDAgXTsgdGhlbg0KICBjaG1vZCAreCAiJFNDUklQVF9OQU1FIg0KICBlY2hvIEFXUy1VcGRhdGVMaW51eEFtaTogUnVubmluZyBVcGRhdGVTU01BZ2VudCBzY3JpcHQgbm93IC4uLi4NCiAgLi8iJFNDUklQVF9OQU1FIiAtLXJlZ2lvbiAiJFJFR0lPTiINCmVsc2UNCiAgZWNobyBBV1MtVXBkYXRlTGludXhBbWk6IFVuYWJsZSB0byBkb3dubG9hZCBzY3JpcHQsIHF1aXR0aW5nIC4uLi4NCmZp",
-        "MinInstanceCount": 1,
-        "MaxInstanceCount": 1,
-        "IamInstanceProfileName": "{{InstanceIamRole}}"
+    "schemaVersion": "0.3",
+    "description": "Deploy MSSQL with SSM Automation",
+    "assumeRole": "{{AutomationAssumeRole}}",
+    "parameters": {
+      "ThirdAZ": {
+        "default": "no",
+        "description": "Enable a 3 AZ deployment, the 3rd AZ can either be used just for the witness, or can be a full SQL cluster node.",
+        "type": "String"
+      },
+      "SQLLicenseProvided": {
+        "default": "yes",
+        "description": "License SQL Server from AWS Marketplace",
+        "type": "String"
+      },
+      "FSXFileSystemID": {
+        "default": "",
+        "description": "ID of the FSX File System to be used as a cluster witness",
+        "type": "String"
+      },
+      "SQLServerVersion": {
+        "default": "2017",
+        "description": "Version of SQL Server to install on Failover Cluster Nodes",
+        "type": "String"
+      },
+      "SQLSecrets": {
+        "description": "AWS Secrets Parameter Name that has Password and User namer for the SQL Service Account.",
+        "type": "String"
+      },
+      "SQL2017Media": {
+        "description": "SQL Server 2017 installation media location",
+        "type": "String"
+      },
+      "DomainDNSName": {
+        "default": "example.com",
+        "description": "Fully qualified domain name (FQDN) of the forest root domain e.g. example.com",
+        "type": "String"
+      },
+      "DomainDNSServer1": {
+        "default": "",
+        "description": "DNS Server 1 for the domain",
+        "type": "String"
+      },
+      "DomainDNSServer2": {
+        "default": "",
+        "description": "DNS Server 2 for the domain",
+        "type": "String"
+      },
+      "WSFCNode2PrivateIP3": {
+        "default": "10.0.32.102",
+        "description": "Third private IP for Availability Group Listener on first WSFC Node",
+        "type": "String"
+      },
+      "WSFCNode2NetBIOSName": {
+        "default": "WSFCNode2",
+        "description": "NetBIOS name of the second WSFC Node (up to 15 characters)",
+        "type": "String"
+      },
+      "AvailabiltyGroupName": {
+        "default": "SQLAG1",
+        "description": "NetBIOS name of the Availablity Group (up to 15 characters)",
+        "type": "String"
+      },
+      "AvailabiltyGroupListenerName": {
+        "default": "SQLAGL1",
+        "description": "NetBIOS name of the Availablity Group (up to 15 characters)",
+        "type": "String"
+      },
+      "QSS3KeyPrefix": {
+        "default": "quickstart-microsoft-sql/",
+        "description": "S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).",
+        "type": "String"
+      },
+      "ManagedAD": {
+        "default": "No",
+        "description": "Active Directory being Managed by AWS",
+        "type": "String"
+      },
+      "WSFCNode1NetBIOSName": {
+        "default": "WSFCNode1",
+        "description": "NetBIOS name of the first WSFC Node (up to 15 characters)",
+        "type": "String"
+      },
+      "ClusterName": {
+        "default": "WSFCCluster1",
+        "description": "NetBIOS name of the Cluster (up to 15 characters)",
+        "type": "String"
+      },
+      "WitnessType": {
+        "default": "Windoes file share",
+        "description": "Failover cluster witness type",
+        "type": "String"
+      },
+      "WSFCNode1PrivateIP1": {
+        "default": "10.0.0.101",
+        "description": "Secondary private IP for WSFC cluster on first WSFC Node",
+        "type": "String"
+      },
+      "WSFCNode1PrivateIP2": {
+        "default": "10.0.0.101",
+        "description": "Secondary private IP for WSFC cluster on first WSFC Node",
+        "type": "String"
+      },
+      "WSFCNode1PrivateIP3": {
+        "default": "10.0.0.102",
+        "description": "Third private IP for Availability Group Listener on first WSFC Node",
+        "type": "String"
+      },
+      "AutomationAssumeRole": {
+        "default": "",
+        "description": "(Optional) The ARN of the role that allows Automation to perform the actions on your behalf.",
+        "type": "String"
+      },
+      "QSS3BucketName": {
+        "default": "aws-quickstart",
+        "description": "S3 bucket name for the Quick Start assets. Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
+        "type": "String"
+      },
+      "DomainNetBIOSName": {
+        "default": "example",
+        "description": "NetBIOS name of the domain (up to 15 characters) for users of earlier versions of Windows e.g. EXAMPLE",
+        "type": "String"
+      },
+      "DomainJoinOU": {
+        "default": "NONPROD",
+        "description": "OU the domain",
+        "type": "String"
+      },
+      "SQL2019Media": {
+        "description": "SQL Server 2019 installation media location",
+        "type": "String"
+      },
+      "WSFCNode2PrivateIP1": {
+        "default": "10.0.0.101",
+        "description": "Secondary private IP for WSFC cluster on first WSFC Node",
+        "type": "String"
+      },
+      "SQL2016Media": {
+        "description": "SQL Server 2016 installation media location",
+        "type": "String"
+      },
+      "URLSuffix": {
+        "description": "AWS URL suffix",
+        "type": "String"
+      },
+      "WSFCNode2PrivateIP2": {
+        "default": "10.0.32.101",
+        "description": "Secondary private IP for WSFC cluster on first WSFC Node",
+        "type": "String"
+      },
+      "AdminSecrets": {
+        "description": "AWS Secrets Parameter Name that has Password and User name for a domain administrator.",
+        "type": "String"
+      },
+      "SQLAdminGroup": {
+        "description": "The AD group name for the sql administrators to be added to sys admin role",
+        "type": "String"
+      },
+      "StackName": {
+        "default": "",
+        "description": "Stack Name Input for cfn resource signal",
+        "type": "String"
+      },
+      "CloudwatchLogGroup": {
+        "default": "quickstart",
+        "description": "Stack Name Input for cfn resource signal",
+        "type": "String"
       }
     },
-    {
-      "name": "updateOSSoftware",
-      "action": "aws:runCommand",
-      "maxAttempts": 3,
-      "timeoutSeconds": 3600,
-      "onFailure": "Abort",
-      "inputs": {
-        "DocumentName": "AWS-RunShellScript",
-        "InstanceIds": [
-          "{{launchInstance.InstanceIds}}"
-        ],
-        "Parameters": {
-          "commands": [
-            "set -e",
-            "[ -x \"$(which wget)\" ] && get_contents='wget $1 -O -'",
-            "[ -x \"$(which curl)\" ] && get_contents='curl -s -f $1'",
-            "eval $get_contents https://aws-ssm-downloads-{{global:REGION}}.s3.amazonaws.com/scripts/aws-update-linux-instance > /tmp/aws-update-linux-instance",
-            "chmod +x /tmp/aws-update-linux-instance",
-            "/tmp/aws-update-linux-instance --pre-update-script '{{PreUpdateScript}}' --post-update-script '{{PostUpdateScript}}' --include-packages '{{IncludePackages}}' --exclude-packages '{{ExcludePackages}}' 2>&1 | tee /tmp/aws-update-linux-instance.log"
-          ]
-        }
-      }
-    },
-    {
-      "name": "stopInstance",
-      "action": "aws:changeInstanceState",
-      "maxAttempts": 3,
-      "timeoutSeconds": 1200,
-      "onFailure": "Abort",
-      "inputs": {
-        "InstanceIds": [
-          "{{launchInstance.InstanceIds}}"
-        ],
-        "DesiredState": "stopped"
-      }
-    },
-    {
-      "name": "createImage",
-      "action": "aws:createImage",
-      "maxAttempts": 3,
-      "onFailure": "Abort",
-      "inputs": {
-        "InstanceId": "{{launchInstance.InstanceIds}}",
-        "ImageName": "{{TargetAmiName}}",
-        "NoReboot": true,
-        "ImageDescription": "AMI Generated by EC2 Automation on {{global:DATE_TIME}} from {{SourceAmiId}}"
-      }
-    },
-    {
-      "name": "terminateInstance",
-      "action": "aws:changeInstanceState",
-      "maxAttempts": 3,
-      "onFailure": "Continue",
-      "inputs": {
-        "InstanceIds": [
-          "{{launchInstance.InstanceIds}}"
-        ],
-        "DesiredState": "terminated"
-      }
-    },
-    {
-         "name":"updateSsmParam",
-         "action":"aws:invokeLambdaFunction",
-         "timeoutSeconds":1200,
-         "maxAttempts":1,
-         "onFailure":"Abort",
-         "inputs":{
-            "FunctionName":"{{SSMAmiLambdaFunctionName}}",
-            "Payload":"{\"parameterName\":\"{{SourceAmiParameterName}}\", \"parameterValue\":\"{{createImage.ImageId}}\"}"
-         }
-      }
-      ${local.approval_request},
+    "mainSteps": [
       {
-         "name":"updateASG",
-         "action":"aws:invokeLambdaFunction",
-         "timeoutSeconds":1200,
-         "maxAttempts":1,
-         "onFailure":"Abort",
-         "inputs": {
-            "FunctionName": "{{SSMAutomationUpdateAsg}}",
-            "Payload": "{\"targetASG\":\"{{targetASG}}\", \"newAmiID\":\"{{createImage.ImageId}}\"}"
-         }
+        "outputs": [
+          {
+            "Type": "String",
+            "Name": "InstanceId",
+            "Selector": "$.Reservations[0].Instances[0].InstanceId"
+          }
+        ],
+        "inputs": {
+          "Filters": [
+            {
+              "Values": [
+                "{{WSFCNode1NetBIOSName}}"
+              ],
+              "Name": "tag:Name"
+            },
+            {
+              "Values": [
+                "running"
+              ],
+              "Name": "instance-state-name"
+            }
+          ],
+          "Service": "ec2",
+          "Api": "DescribeInstances"
+        },
+        "name": "wsfcNode1InstanceId",
+        "action": "aws:executeAwsApi",
+        "onFailure": "step:sleepend"
+      },
+      {
+        "outputs": [
+          {
+            "Type": "String",
+            "Name": "InstanceId",
+            "Selector": "$.Reservations[0].Instances[0].InstanceId"
+          }
+        ],
+        "inputs": {
+          "Filters": [
+            {
+              "Values": [
+                "{{WSFCNode2NetBIOSName}}"
+              ],
+              "Name": "tag:Name"
+            },  
+            {
+              "Values": [
+                "running"
+              ],
+              "Name": "instance-state-name"
+            }
+          ],
+          "Service": "ec2",
+          "Api": "DescribeInstances"
+        },
+        "name": "wsfcNode2InstanceId",
+        "action": "aws:executeAwsApi",
+        "onFailure": "step:sleepend"
+      },
+      {
+        "outputs": [
+          {
+            "Type": "StringList",
+            "Name": "InstanceIds",
+            "Selector": "$.Reservations..Instances..InstanceId"
+          }
+        ],
+        "inputs": {
+          "Filters": [
+            {
+              "Values": [
+                "{{WSFCNode1NetBIOSName}}",
+                "{{WSFCNode2NetBIOSName}}"
+              ],
+              "Name": "tag:Name"
+            },
+   
+            {
+              "Values": [
+                "running"
+              ],
+              "Name": "instance-state-name"
+            }
+          ],
+          "Service": "ec2",
+          "Api": "DescribeInstances"
+        },
+        "name": "wsfcfInstanceIds",
+        "action": "aws:executeAwsApi",
+        "onFailure": "step:sleepend"
+      },
+      {
+        "inputs": {
+          "Parameters": {
+            "sourceInfo": "{\"path\": \"https://{{QSS3BucketName}}.s3.{{URLSuffix}}/{{QSS3KeyPrefix}}scripts/install-sql-modules.ps1\"}",
+            "sourceType": "S3",
+            "commandLine": "./install-sql-modules.ps1"
+          },
+          "CloudWatchOutputConfig": {
+            "CloudWatchOutputEnabled": "true",
+            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+          },
+          "InstanceIds": [
+            "{{wsfcfInstanceIds.InstanceIds}}"
+          ],
+          "DocumentName": "AWS-RunRemoteScript"
+        },
+        "name": "wsfcfInstallDscModules",
+        "action": "aws:runCommand",
+        "onFailure": "step:sleepend"
+      },
+      {
+        "inputs": {
+          "Parameters": {
+            "sourceInfo": "{\"path\": \"https://{{QSS3BucketName}}.s3.{{URLSuffix}}/{{QSS3KeyPrefix}}scripts/Initialize-GPT.ps1\"}",
+            "sourceType": "S3",
+            "commandLine": "./Initialize-GPT.ps1"
+          },
+          "CloudWatchOutputConfig": {
+            "CloudWatchOutputEnabled": "true",
+            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+          },
+          "InstanceIds": [
+            "{{wsfcfInstanceIds.InstanceIds}}"
+          ],
+          "DocumentName": "AWS-RunRemoteScript"
+        },
+        "name": "wsfcnodefInitializeDisk",
+        "action": "aws:runCommand",
+        "onFailure": "step:sleepend"
+      },
+      {
+        "inputs": {
+          "Parameters": {
+            "sourceInfo": "{\"path\": \"https://{{QSS3BucketName}}.s3.{{URLSuffix}}/{{QSS3KeyPrefix}}scripts/LCM-Config.ps1\"}",
+            "sourceType": "S3",
+            "commandLine": "./LCM-Config.ps1"
+          },
+          "CloudWatchOutputConfig": {
+            "CloudWatchOutputEnabled": "true",
+            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+          },
+          "InstanceIds": [
+            "{{wsfcfInstanceIds.InstanceIds}}"
+          ],
+          "DocumentName": "AWS-RunRemoteScript"
+        },
+        "name": "wsfcfLCMConfig",
+        "action": "aws:runCommand",
+        "onFailure": "step:sleepend"
+      },
+      {
+        "inputs": {
+          "Parameters": {
+            "sourceInfo": "{\"path\": \"https://{{QSS3BucketName}}.s3.{{URLSuffix}}/{{QSS3KeyPrefix}}scripts/DomainJoin.ps1\"}",
+            "sourceType": "S3",
+            "commandLine": "./DomainJoin.ps1 -DomainNetBIOSName {{DomainNetBIOSName}} -DomainDNSName {{DomainDNSName}} -AdminSecret {{AdminSecrets}} -OU {{DomainJoinOU}}"
+          },
+          "CloudWatchOutputConfig": {
+            "CloudWatchOutputEnabled": "true",
+            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+          },
+          "InstanceIds": [
+            "{{wsfcfInstanceIds.InstanceIds}}"
+          ],
+          "DocumentName": "AWS-RunRemoteScript"
+        },
+        "name": "wsfcfDomainJoin",
+        "action": "aws:runCommand",
+        "onFailure": "step:sleepend"
+      },
+      {
+        "inputs": {
+          "Parameters": {
+            "commands": [
+              "function DscStatusCheck () {\n    $LCMState = (Get-DscLocalConfigurationManager).LCMState\n    if ($LCMState -eq 'PendingConfiguration' -Or $LCMState -eq 'PendingReboot') {\n        'returning 3010, should continue after reboot'\n        exit 3010\n    } else {\n      'Completed'\n    }\n}\n\nStart-DscConfiguration 'C:\\AWSQuickstart\\DomainJoin' -Wait -Verbose -Force\n\nDscStatusCheck\n"
+            ]
+          },
+          "CloudWatchOutputConfig": {
+            "CloudWatchOutputEnabled": "true",
+            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+          },
+          "InstanceIds": [
+            "{{wsfcfInstanceIds.InstanceIds}}"
+          ],
+          "DocumentName": "AWS-RunPowerShellScript"
+        },
+        "name": "wsfcfDomainConfig",
+        "action": "aws:runCommand",
+        "onFailure": "step:sleepend"
+      },
+      {
+        "inputs": {
+          "Parameters": {
+            "sourceInfo": "{\"path\": \"https://{{QSS3BucketName}}.s3.{{URLSuffix}}/{{QSS3KeyPrefix}}scripts/Node1Config.ps1\"}",
+            "sourceType": "S3",
+            "commandLine": "./Node1Config.ps1 -DomainNetBIOSName {{DomainNetBIOSName}} -DomainDNSName {{DomainDNSName}} -WSFCNode1PrivateIP2 {{WSFCNode1PrivateIP2}} -ClusterName {{ClusterName}} -AdminSecret {{AdminSecrets}} -SQLSecret {{SQLSecrets}} -FSXFileSystemID {{FSXFileSystemID}}"
+          },
+          "CloudWatchOutputConfig": {
+            "CloudWatchOutputEnabled": "true",
+            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+          },
+          "InstanceIds": [
+            "{{wsfcNode1InstanceId.InstanceId}}"
+          ],
+          "DocumentName": "AWS-RunRemoteScript"
+        },
+        "name": "Node1fMof",
+        "action": "aws:runCommand",
+        "onFailure": "step:sleepend",
+        "nextStep": "Node1wConfig"
+      },
+      {
+        "inputs": {
+          "Parameters": {
+            "commands": [
+              "function DscStatusCheck () {\n    $LCMState = (Get-DscLocalConfigurationManager).LCMState\n    if ($LCMState -eq 'PendingConfiguration' -Or $LCMState -eq 'PendingReboot') {\n        'returning 3010, should continue after reboot'\n        exit 3010\n    } else {\n      'Completed'\n    }\n}\n\nStart-DscConfiguration 'C:\\AWSQuickstart\\WSFCNode1Config' -Wait -Verbose -Force\n\nDscStatusCheck\n"
+            ]
+          },
+          "CloudWatchOutputConfig": {
+            "CloudWatchOutputEnabled": "true",
+            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+          },
+          "InstanceIds": [
+            "{{wsfcNode1InstanceId.InstanceId}}"
+          ],
+          "DocumentName": "AWS-RunPowerShellScript"
+        },
+        "name": "Node1wConfig",
+        "action": "aws:runCommand",
+        "onFailure": "step:sleepend"
+      },
+      {
+        "inputs": {
+          "Parameters": {
+            "sourceInfo": "{\"path\": \"https://{{QSS3BucketName}}.s3.{{URLSuffix}}/{{QSS3KeyPrefix}}scripts/AdditionalNodeConfig.ps1\"}",
+            "sourceType": "S3",
+            "commandLine": "./AdditionalNodeConfig.ps1 -DomainNetBIOSName {{DomainNetBIOSName}} -WSFCNodePrivateIP2 {{WSFCNode2PrivateIP2}} -ClusterName {{ClusterName}} -AdminSecret {{AdminSecrets}} -SQLSecret {{SQLSecrets}}"
+          },
+          "CloudWatchOutputConfig": {
+            "CloudWatchOutputEnabled": "true",
+            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+          },
+          "InstanceIds": [
+            "{{wsfcNode2InstanceId.InstanceId}}"
+          ],
+          "DocumentName": "AWS-RunRemoteScript"
+        },
+        "name": "Node2Mof",
+        "action": "aws:runCommand",
+        "onFailure": "step:sleepend"
+      },
+      {
+        "inputs": {
+          "Parameters": {
+            "commands": [
+              "function DscStatusCheck () {\n    $LCMState = (Get-DscLocalConfigurationManager).LCMState\n    if ($LCMState -eq 'PendingConfiguration' -Or $LCMState -eq 'PendingReboot') {\n        'returning 3010, should continue after reboot'\n        exit 3010\n    } else {\n      'Completed'\n    }\n}\n\nStart-DscConfiguration 'C:\\AWSQuickstart\\AdditionalWSFCNode' -Wait -Verbose -Force\n\nDscStatusCheck\n"
+            ]
+          },
+          "CloudWatchOutputConfig": {
+            "CloudWatchOutputEnabled": "true",
+            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+          },
+          "InstanceIds": [
+            "{{wsfcNode2InstanceId.InstanceId}}"
+          ],
+          "DocumentName": "AWS-RunPowerShellScript"
+        },
+        "name": "Node2Config",
+        "action": "aws:runCommand",
+        "onFailure": "step:sleepend"
+      },
+      {
+        "inputs": {
+          "Choices": [
+            {
+              "StringEquals": "no",
+              "Variable": "{{SQLLicenseProvided}}",
+              "NextStep": "2NodeDownloadSQL"
+            },
+            {
+              "StringEquals": "yes",
+              "Variable": "{{SQLLicenseProvided}}",
+              "NextStep": "2NodeReconfigureSQL"
+            }
+          ]
+        },
+        "name": "SqlInstallBranch",
+        "action": "aws:branch"
+      },
+      {
+        "inputs": {
+          "Parameters": {
+            "sourceInfo": "{\"path\": \"https://{{QSS3BucketName}}.s3.{{URLSuffix}}/{{QSS3KeyPrefix}}scripts/DownloadSQLEE.ps1\"}",
+            "sourceType": "S3",
+            "commandLine": "./DownloadSQLEE.ps1 -SQLServerVersion {{SQLServerVersion}} -SQL2016Media {{SQL2016Media}} -SQL2017Media {{SQL2017Media}} -SQL2019Media {{SQL2019Media}}"
+          },
+          "CloudWatchOutputConfig": {
+            "CloudWatchOutputEnabled": "true",
+            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+          },
+          "InstanceIds": [
+            "{{wsfcNode1InstanceId.InstanceId}}",
+            "{{wsfcNode2InstanceId.InstanceId}}"
+          ],
+          "DocumentName": "AWS-RunRemoteScript"
+        },
+        "name": "2NodeDownloadSQL",
+        "action": "aws:runCommand",
+        "onFailure": "step:sleepend"
+      },
+      {
+        "inputs": {
+          "Parameters": {
+            "sourceInfo": "{\"path\": \"https://{{QSS3BucketName}}.s3.{{URLSuffix}}/{{QSS3KeyPrefix}}scripts/Install-SQLEE.ps1\"}",
+            "sourceType": "S3",
+            "commandLine": "./Install-SQLEE.ps1 -DomainNetBIOSName {{DomainNetBIOSName}} -DomainDNSName {{DomainDNSName}} -AdminSecret {{AdminSecrets}} -SQLServerVersion {{SQLServerVersion}} -SQLSecret {{SQLSecrets}} -SQLAdminGroup {{SQLAdminGroup}}"
+          },
+          "CloudWatchOutputConfig": {
+            "CloudWatchOutputEnabled": "true",
+            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+          },
+          "InstanceIds": [
+            "{{wsfcNode1InstanceId.InstanceId}}",
+            "{{wsfcNode2InstanceId.InstanceId}}"
+          ],
+          "DocumentName": "AWS-RunRemoteScript"
+        },
+        "name": "2NodeSQLInstallMOF",
+        "action": "aws:runCommand",
+        "onFailure": "step:sleepend"
+      },
+      {
+        "inputs": {
+          "Parameters": {
+            "commands": [
+              "function DscStatusCheck () {\n    $LCMState = (Get-DscLocalConfigurationManager).LCMState\n    if ($LCMState -eq 'PendingConfiguration' -Or $LCMState -eq 'PendingReboot') {\n        'returning 3010, should continue after reboot'\n        exit 3010\n    } else {\n      'Completed'\n    }\n}\n\nStart-DscConfiguration 'C:\\AWSQuickstart\\SQLInstall' -Wait -Verbose -Force\n\nDscStatusCheck\n"
+            ]
+          },
+          "CloudWatchOutputConfig": {
+            "CloudWatchOutputEnabled": "true",
+            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+          },
+          "InstanceIds": [
+            "{{wsfcNode1InstanceId.InstanceId}}",
+            "{{wsfcNode2InstanceId.InstanceId}}"
+          ],
+          "DocumentName": "AWS-RunPowerShellScript"
+        },
+        "name": "2NodeSQLInstall",
+        "action": "aws:runCommand",
+        "onFailure": "step:sleepend"
+      },
+      {
+        "inputs": {
+          "Parameters": {
+            "commands": [
+              "$ssms = \"C:\\SQLMedia\\SSMS-Setup-ENU.exe\"\n$ssmsargs = \"/quiet /norestart\"\nStart-Process $ssms $ssmsargs -Wait -ErrorAction Stop\n"
+            ]
+          },
+          "CloudWatchOutputConfig": {
+            "CloudWatchOutputEnabled": "true",
+            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+          },
+          "InstanceIds": [
+            "{{wsfcNode1InstanceId.InstanceId}}",
+            "{{wsfcNode2InstanceId.InstanceId}}"
+          ],
+          "DocumentName": "AWS-RunPowerShellScript"
+        },
+        "name": "2NodeInstallSSMS",
+        "action": "aws:runCommand",
+        "onFailure": "step:sleepend",
+        "nextStep": "CreateAGBranch"
+      },
+      {
+        "inputs": {
+          "Parameters": {
+            "sourceInfo": "{\"path\": \"https://{{QSS3BucketName}}.s3.{{URLSuffix}}/{{QSS3KeyPrefix}}scripts/Reconfigure-SQL-DSC.ps1\"}",
+            "sourceType": "S3",
+            "commandLine": "./Reconfigure-SQL-DSC.ps1 -DomainNetBIOSName {{DomainNetBIOSName}} -AdminSecret {{AdminSecrets}} -SQLSecret {{SQLSecrets}}"
+          },
+          "CloudWatchOutputConfig": {
+            "CloudWatchOutputEnabled": "true",
+            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+          },
+          "InstanceIds": [
+            "{{wsfcNode1InstanceId.InstanceId}}",
+            "{{wsfcNode2InstanceId.InstanceId}}"
+          ],
+          "DocumentName": "AWS-RunRemoteScript"
+        },
+        "name": "2NodeReconfigureSQL",
+        "action": "aws:runCommand",
+        "onFailure": "step:sleepend",
+        "nextStep": "CreateAGBranch"
+      },
+      {
+        "inputs": {
+          "Choices": [
+            {
+              "And": [
+                {
+                  "Not": {
+                    "StringEquals": "yes",
+                    "Variable": "{{ManagedAD}}"
+                  }
+                },
+                {
+                  "Not": {
+                    "StringEquals": "full",
+                    "Variable": "{{ThirdAZ}}"
+                  }
+                }
+              ],
+              "NextStep": "2NodeNoMadPrimaryCreateAG"
+            },
+            {
+              "And": [
+                {
+                  "StringEquals": "yes",
+                  "Variable": "{{ManagedAD}}"
+                },
+                {
+                  "Not": {
+                    "StringEquals": "full",
+                    "Variable": "{{ThirdAZ}}"
+                  }
+                }
+              ],
+              "NextStep": "2NodeMadPrimaryCreateAG"
+            }
+          ]
+        },
+        "name": "CreateAGBranch",
+        "action": "aws:branch"
+      },
+      {
+        "inputs": {
+          "Parameters": {
+            "sourceInfo": "{\"path\": \"https://{{QSS3BucketName}}.s3.{{URLSuffix}}/{{QSS3KeyPrefix}}scripts/CreateAGNode1.ps1\"}",
+            "sourceType": "S3",
+            "commandLine": "./CreateAGNode1.ps1 -DomainNetBIOSName {{DomainNetBIOSName}} -DomainDNSName {{DomainDNSName}} -AdminSecret {{AdminSecrets}} -SQLSecret {{SQLSecrets}} -ClusterName {{ClusterName}} -AvailabiltyGroupName {{AvailabiltyGroupName}} -AvailabiltyGroupListenerName {{AvailabiltyGroupListenerName}} -WSFCNode1NetBIOSName {{WSFCNode1NetBIOSName}} -WSFCNode2NetBIOSName {{WSFCNode2NetBIOSName}} -AGListener1PrivateIP1 {{WSFCNode1PrivateIP3}} -AGListener1PrivateIP2 {{WSFCNode2PrivateIP3}}"
+          },
+          "CloudWatchOutputConfig": {
+            "CloudWatchOutputEnabled": "true",
+            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+          },
+          "InstanceIds": [
+            "{{wsfcNode1InstanceId.InstanceId}}"
+          ],
+          "DocumentName": "AWS-RunRemoteScript"
+        },
+        "name": "2NodeNoMadPrimaryCreateAG",
+        "action": "aws:runCommand",
+        "onFailure": "step:sleepend"
+      },
+      {
+        "inputs": {
+          "Parameters": {
+            "commands": [
+              "function DscStatusCheck () {\n    $LCMState = (Get-DscLocalConfigurationManager).LCMState\n    if ($LCMState -eq 'PendingConfiguration' -Or $LCMState -eq 'PendingReboot') {\n        'returning 3010, should continue after reboot'\n        exit 3010\n    } else {\n      'Completed'\n    }\n}\n\nStart-DscConfiguration 'C:\\AWSQuickstart\\AddAG' -Wait -Verbose -Force\n\nDscStatusCheck\n"
+            ]
+          },
+          "CloudWatchOutputConfig": {
+            "CloudWatchOutputEnabled": "true",
+            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+          },
+          "InstanceIds": [
+            "{{wsfcNode1InstanceId.InstanceId}}"
+          ],
+          "DocumentName": "AWS-RunPowerShellScript"
+        },
+        "name": "2NodeNoMadPrimaryCreateAGConfig",
+        "action": "aws:runCommand",
+        "onFailure": "step:sleepend",
+        "nextStep": "AdditionalCreateAGBranch"
+      },
+      {
+        "inputs": {
+          "Parameters": {
+            "sourceInfo": "{\"path\": \"https://{{QSS3BucketName}}.s3.{{URLSuffix}}/{{QSS3KeyPrefix}}scripts/CreateAGNode1.ps1\"}",
+            "sourceType": "S3",
+            "commandLine": "./CreateAGNode1.ps1 -DomainNetBIOSName {{DomainNetBIOSName}} -DomainDNSName {{DomainDNSName}} -AdminSecret {{AdminSecrets}} -SQLSecret {{SQLSecrets}} -ClusterName {{ClusterName}} -AvailabiltyGroupName {{AvailabiltyGroupName}} -AvailabiltyGroupListenerName {{AvailabiltyGroupListenerName}} -WSFCNode1NetBIOSName {{WSFCNode1NetBIOSName}} -WSFCNode2NetBIOSName {{WSFCNode2NetBIOSName}} -AGListener1PrivateIP1 {{WSFCNode1PrivateIP3}} -AGListener1PrivateIP2 {{WSFCNode2PrivateIP3}} -ManagedAD 'Yes'"
+          },
+          "CloudWatchOutputConfig": {
+            "CloudWatchOutputEnabled": "true",
+            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+          },
+          "InstanceIds": [
+            "{{wsfcNode1InstanceId.InstanceId}}"
+          ],
+          "DocumentName": "AWS-RunRemoteScript"
+        },
+        "name": "2NodeMadPrimaryCreateAG",
+        "action": "aws:runCommand",
+        "onFailure": "step:sleepend"
+      },
+      {
+        "inputs": {
+          "Parameters": {
+            "commands": [
+              "function DscStatusCheck () {\n    $LCMState = (Get-DscLocalConfigurationManager).LCMState\n    if ($LCMState -eq 'PendingConfiguration' -Or $LCMState -eq 'PendingReboot') {\n        'returning 3010, should continue after reboot'\n        exit 3010\n    } else {\n      'Completed'\n    }\n}\n\nStart-DscConfiguration 'C:\\AWSQuickstart\\AddAG' -Wait -Verbose -Force\n\nDscStatusCheck\n"
+            ]
+          },
+          "CloudWatchOutputConfig": {
+            "CloudWatchOutputEnabled": "true",
+            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+          },
+          "InstanceIds": [
+            "{{wsfcNode1InstanceId.InstanceId}}"
+          ],
+          "DocumentName": "AWS-RunPowerShellScript"
+        },
+        "name": "2NodeMadPrimaryCreateAGConfig",
+        "action": "aws:runCommand",
+        "onFailure": "step:sleepend",
+        "nextStep": "2NodeAdditionalCreateAG"
+      },
+      {
+        "inputs": {
+          "Parameters": {
+            "sourceInfo": "{\"path\": \"https://{{QSS3BucketName}}.s3.{{URLSuffix}}/{{QSS3KeyPrefix}}scripts/AdditionalNodeCreateAG.ps1\"}",
+            "sourceType": "S3",
+            "commandLine": "./AdditionalNodeCreateAG.ps1 -DomainNetBIOSName {{DomainNetBIOSName}} -AdminSecret {{AdminSecrets}} -SQLSecret {{SQLSecrets}} -ClusterName {{ClusterName}} -AvailabiltyGroupName {{AvailabiltyGroupName}} -PrimaryNetBIOSName {{WSFCNode1NetBIOSName}}"
+          },
+          "CloudWatchOutputConfig": {
+            "CloudWatchOutputEnabled": "true",
+            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+          },
+          "InstanceIds": [
+            "{{wsfcNode2InstanceId.InstanceId}}"
+          ],
+          "DocumentName": "AWS-RunRemoteScript"
+        },
+        "name": "2NodeAdditionalCreateAG",
+        "action": "aws:runCommand",
+        "onFailure": "step:sleepend"
+      },
+      {
+        "inputs": {
+          "Parameters": {
+            "commands": [
+              "function DscStatusCheck () {\n    $LCMState = (Get-DscLocalConfigurationManager).LCMState\n    if ($LCMState -eq 'PendingConfiguration' -Or $LCMState -eq 'PendingReboot') {\n        'returning 3010, should continue after reboot'\n        exit 3010\n    } else {\n      'Completed'\n    }\n}\n\nStart-DscConfiguration 'C:\\AWSQuickstart\\AddAG' -Wait -Verbose -Force\n\nDscStatusCheck\n"
+            ]
+          },
+          "CloudWatchOutputConfig": {
+            "CloudWatchOutputEnabled": "true",
+            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+          },
+          "InstanceIds": [
+            "{{wsfcNode2InstanceId.InstanceId}}"
+          ],
+          "DocumentName": "AWS-RunPowerShellScript"
+        },
+        "name": "2NodeAdditionalCreateAGConfig",
+        "action": "aws:runCommand",
+        "onFailure": "step:sleepend",
+        "nextStep": "CFNSignalEnd"
+      },
+      {
+        "inputs": {
+          "Choices": [
+            {
+              "Not": {
+                "StringEquals": "",
+                "Variable": "{{StackName}}"
+              },
+              "NextStep": "sleepend"
+            },
+            {
+              "StringEquals": "",
+              "Variable": "{{StackName}}",
+              "NextStep": "sleepend"
+            }
+          ]
+        },
+        "name": "CFNSignalEnd",
+        "action": "aws:branch"
+      },
+      {
+        "inputs": {
+          "Duration": "PT1S"
+        },
+        "name": "sleepend",
+        "action": "aws:sleep",
+        "isEnd": true
       }
-  ],
-  "outputs": [
-    "createImage.ImageId"
-  ]
+    ]
 }
 DOC
 }
