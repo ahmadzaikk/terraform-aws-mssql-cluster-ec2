@@ -1,6 +1,6 @@
 variable "prefix" {
     description = "Prefix used to name resources"
-    default     = ""
+    default     = "kk"
 }
 
 variable "managed_ad" {
