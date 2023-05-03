@@ -265,10 +265,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "description": "SQL Server 2016 installation media location",
         "type": "String"
       },
-      "URLSuffix": {
-        "description": "AWS URL suffix",
-        "type": "String"
-      },
+     
       "WSFCNode2PrivateIP2": {
         "default": "10.0.32.101",
         "description": "Secondary private IP for WSFC cluster on first WSFC Node",
