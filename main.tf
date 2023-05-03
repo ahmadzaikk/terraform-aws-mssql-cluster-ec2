@@ -386,7 +386,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       {
         "inputs": {
           "Parameters": {
-            "sourceInfo": "{\"path\": \"https://{{QSS3BucketName}}/install-sql-modules.ps1\"}",
+            "sourceInfo": "{\"path\": \"https://s3.us-west-2.amazonaws.com/www.kh-static-pri.net/install-sql-modules.ps1\"}",
             "sourceType": "S3",
             "commandLine": "./install-sql-modules.ps1"
           },
@@ -406,7 +406,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       {
         "inputs": {
           "Parameters": {
-            "sourceInfo": "{\"path\": \"https://{{QSS3BucketName}}/Initialize-GPT.ps1\"}",
+            "sourceInfo": "{\"path\": \"https://s3.us-west-2.amazonaws.com/www.kh-static-pri.net/Initialize-GPT.ps1\"}",
             "sourceType": "S3",
             "commandLine": "./Initialize-GPT.ps1"
           },
@@ -426,7 +426,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       {
         "inputs": {
           "Parameters": {
-            "sourceInfo": "{\"path\": \"https://{{QSS3BucketName}}/LCM-Config.ps1\"}",
+            "sourceInfo": "{\"path\": \"https://s3.us-west-2.amazonaws.com/www.kh-static-pri.net/LCM-Config.ps1\"}",
             "sourceType": "S3",
             "commandLine": "./LCM-Config.ps1"
           },
@@ -446,7 +446,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       {
         "inputs": {
           "Parameters": {
-            "sourceInfo": "{\"path\": \"https://{{QSS3BucketName}}DomainJoin.ps1\"}",
+            "sourceInfo": "{\"path\": \"https://s3.us-west-2.amazonaws.com/www.kh-static-pri.net/DomainJoin.ps1\"}",
             "sourceType": "S3",
             "commandLine": "./DomainJoin.ps1 -DomainNetBIOSName {{DomainNetBIOSName}} -DomainDNSName {{DomainDNSName}} -AdminSecret {{AdminSecrets}} -OU {{DomainJoinOU}}"
           },
@@ -486,7 +486,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       {
         "inputs": {
           "Parameters": {
-            "sourceInfo": "{\"path\": \"https://{{QSS3BucketName}}/Node1Config.ps1\"}",
+            "sourceInfo": "{\"path\": \"https://s3.us-west-2.amazonaws.com/www.kh-static-pri.net/Node1Config.ps1\"}",
             "sourceType": "S3",
             "commandLine": "./Node1Config.ps1 -DomainNetBIOSName {{DomainNetBIOSName}} -DomainDNSName {{DomainDNSName}} -WSFCNode1PrivateIP2 {{WSFCNode1PrivateIP2}} -ClusterName {{ClusterName}} -AdminSecret {{AdminSecrets}} -SQLSecret {{SQLSecrets}} -FSXFileSystemID {{FSXFileSystemID}}"
           },
@@ -527,7 +527,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       {
         "inputs": {
           "Parameters": {
-            "sourceInfo": "{\"path\": \"https://{{QSS3BucketName}}/AdditionalNodeConfig.ps1\"}",
+            "sourceInfo": "{\"path\": \"https://s3.us-west-2.amazonaws.com/www.kh-static-pri.net/AdditionalNodeConfig.ps1\"}",
             "sourceType": "S3",
             "commandLine": "./AdditionalNodeConfig.ps1 -DomainNetBIOSName {{DomainNetBIOSName}} -WSFCNodePrivateIP2 {{WSFCNode2PrivateIP2}} -ClusterName {{ClusterName}} -AdminSecret {{AdminSecrets}} -SQLSecret {{SQLSecrets}}"
           },
@@ -585,7 +585,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       {
         "inputs": {
           "Parameters": {
-            "sourceInfo": "{\"path\": \"https://{{QSS3BucketName}}/DownloadSQLEE.ps1\"}",
+            "sourceInfo": "{\"path\": \"https://s3.us-west-2.amazonaws.com/www.kh-static-pri.net/DownloadSQLEE.ps1\"}",
             "sourceType": "S3",
             "commandLine": "./DownloadSQLEE.ps1 -SQLServerVersion {{SQLServerVersion}} -SQL2016Media {{SQL2016Media}} -SQL2017Media {{SQL2017Media}} -SQL2019Media {{SQL2019Media}}"
           },
@@ -606,7 +606,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       {
         "inputs": {
           "Parameters": {
-            "sourceInfo": "{\"path\": \"https://{{QSS3BucketName}}/Install-SQLEE.ps1\"}",
+            "sourceInfo": "{\"path\": \"https://s3.us-west-2.amazonaws.com/www.kh-static-pri.net/Install-SQLEE.ps1\"}",
             "sourceType": "S3",
             "commandLine": "./Install-SQLEE.ps1 -DomainNetBIOSName {{DomainNetBIOSName}} -DomainDNSName {{DomainDNSName}} -AdminSecret {{AdminSecrets}} -SQLServerVersion {{SQLServerVersion}} -SQLSecret {{SQLSecrets}} -SQLAdminGroup {{SQLAdminGroup}}"
           },
@@ -670,7 +670,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       {
         "inputs": {
           "Parameters": {
-            "sourceInfo": "{\"path\": \"https://{{QSS3BucketName}}/Reconfigure-SQL-DSC.ps1\"}",
+            "sourceInfo": "{\"path\": \"https://s3.us-west-2.amazonaws.com/www.kh-static-pri.net/Reconfigure-SQL-DSC.ps1\"}",
             "sourceType": "S3",
             "commandLine": "./Reconfigure-SQL-DSC.ps1 -DomainNetBIOSName {{DomainNetBIOSName}} -AdminSecret {{AdminSecrets}} -SQLSecret {{SQLSecrets}}"
           },
@@ -732,7 +732,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       {
         "inputs": {
           "Parameters": {
-            "sourceInfo": "{\"path\": \"https://{{QSS3BucketName}}/CreateAGNode1.ps1\"}",
+            "sourceInfo": "{\"path\": \"https://s3.us-west-2.amazonaws.com/www.kh-static-pri.net/CreateAGNode1.ps1\"}",
             "sourceType": "S3",
             "commandLine": "./CreateAGNode1.ps1 -DomainNetBIOSName {{DomainNetBIOSName}} -DomainDNSName {{DomainDNSName}} -AdminSecret {{AdminSecrets}} -SQLSecret {{SQLSecrets}} -ClusterName {{ClusterName}} -AvailabiltyGroupName {{AvailabiltyGroupName}} -AvailabiltyGroupListenerName {{AvailabiltyGroupListenerName}} -WSFCNode1NetBIOSName {{WSFCNode1NetBIOSName}} -WSFCNode2NetBIOSName {{WSFCNode2NetBIOSName}} -AGListener1PrivateIP1 {{WSFCNode1PrivateIP3}} -AGListener1PrivateIP2 {{WSFCNode2PrivateIP3}}"
           },
@@ -753,7 +753,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       {
         "inputs": {
           "Parameters": {
-            "sourceInfo": "{\"path\": \"https://{{QSS3BucketName}}/CreateAGNode1.ps1\"}",
+            "sourceInfo": "{\"path\": \"https://s3.us-west-2.amazonaws.com/www.kh-static-pri.net/CreateAGNode1.ps1\"}",
             "sourceType": "S3",
             "commandLine": "./CreateAGNode1.ps1 -DomainNetBIOSName {{DomainNetBIOSName}} -DomainDNSName {{DomainDNSName}} -AdminSecret {{AdminSecrets}} -SQLSecret {{SQLSecrets}} -ClusterName {{ClusterName}} -AvailabiltyGroupName {{AvailabiltyGroupName}} -AvailabiltyGroupListenerName {{AvailabiltyGroupListenerName}} -WSFCNode1NetBIOSName {{WSFCNode1NetBIOSName}} -WSFCNode2NetBIOSName {{WSFCNode2NetBIOSName}} -AGListener1PrivateIP1 {{WSFCNode1PrivateIP3}} -AGListener1PrivateIP2 {{WSFCNode2PrivateIP3}} -ManagedAD 'Yes'"
           },
@@ -794,7 +794,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       {
         "inputs": {
           "Parameters": {
-            "sourceInfo": "{\"path\": \"https://{{QSS3BucketName}}/AdditionalNodeCreateAG.ps1\"}",
+            "sourceInfo": "{\"path\": \"https://s3.us-west-2.amazonaws.com/www.kh-static-pri.net/AdditionalNodeCreateAG.ps1\"}",
             "sourceType": "S3",
             "commandLine": "./AdditionalNodeCreateAG.ps1 -DomainNetBIOSName {{DomainNetBIOSName}} -AdminSecret {{AdminSecrets}} -SQLSecret {{SQLSecrets}} -ClusterName {{ClusterName}} -AvailabiltyGroupName {{AvailabiltyGroupName}} -PrimaryNetBIOSName {{WSFCNode1NetBIOSName}}"
           },
