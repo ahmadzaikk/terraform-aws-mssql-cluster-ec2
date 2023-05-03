@@ -105,7 +105,7 @@ resource "aws_security_group" "fsx_sg" {
 resource "aws_fsx_windows_file_system" "fsx" {
   active_directory_id               = var.managed_ad_id
   kms_key_id                        = var.fsx_kms_key
-  storage_capacity                  = 5
+  storage_capacity                  = 32
   storage_type                      = "SSD"
   subnet_ids                        = [var.private_subnet_1, var.private_subnet_2]
   throughput_capacity               = 8
