@@ -752,27 +752,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "action": "aws:runCommand",
         "onFailure": "step:sleepend"
       },
-      {
-        "inputs": {
-          "Parameters": {
-            "commands": [
-              "function DscStatusCheck () {\n    $LCMState = (Get-DscLocalConfigurationManager).LCMState\n    if ($LCMState -eq 'PendingConfiguration' -Or $LCMState -eq 'PendingReboot') {\n        'returning 3010, should continue after reboot'\n        exit 3010\n    } else {\n      'Completed'\n    }\n}\n\nStart-DscConfiguration 'C:\\AWSQuickstart\\AddAG' -Wait -Verbose -Force\n\nDscStatusCheck\n"
-            ]
-          },
-          "CloudWatchOutputConfig": {
-            "CloudWatchOutputEnabled": "true",
-            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
-          },
-          "InstanceIds": [
-            "{{wsfcNode1InstanceId.InstanceId}}"
-          ],
-          "DocumentName": "AWS-RunPowerShellScript"
-        },
-        "name": "2NodeNoMadPrimaryCreateAGConfig",
-        "action": "aws:runCommand",
-        "onFailure": "step:sleepend",
-        "nextStep": "AdditionalCreateAGBranch"
-      },
+      
       {
         "inputs": {
           "Parameters": {
