@@ -389,7 +389,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       {
         "inputs": {
           "Parameters": {
-            "sourceInfo": "{\"path\": \"https://{{QSS3BucketName}}.s3.{{URLSuffix}}/{{QSS3KeyPrefix}}scripts/install-sql-modules.ps1\"}",
+            "sourceInfo": "{\"path\": \"https://{{QSS3BucketName}}/install-sql-modules.ps1\"}",
             "sourceType": "S3",
             "commandLine": "./install-sql-modules.ps1"
           },
