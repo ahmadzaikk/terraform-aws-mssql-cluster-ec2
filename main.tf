@@ -768,11 +768,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
           ],
           "DocumentName": "AWS-RunPowerShellScript"
         },
-         "name": "2NodeMadPrimaryCreateAG",
-        "action": "aws:runCommand",
-        "onFailure": "step:sleepend"
-      },
-        "name": "AdditionalCreateAGBranch",
+        "name": "2NodeNoMadPrimaryCreateAGConfig",
         "action": "aws:runCommand",
         "onFailure": "step:sleepend",
         "nextStep": "AdditionalCreateAGBranch"
