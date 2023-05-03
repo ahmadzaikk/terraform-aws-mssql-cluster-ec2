@@ -125,7 +125,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
 
   content = <<DOC
 {
-    "schemaVersion": "0.3",
+    "schemaVersion": "4.65.0",
     "description": "Deploy MSSQL with SSM Automation",
     "assumeRole": "{{AutomationAssumeRole}}",
     "parameters": {
