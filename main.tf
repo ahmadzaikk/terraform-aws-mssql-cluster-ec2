@@ -158,27 +158,27 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "DomainDNSName": {
-        "default": "example.com",
+        "default": "kk.com",
         "description": "Fully qualified domain name (FQDN) of the forest root domain e.g. example.com",
         "type": "String"
       },
       "DomainDNSServer1": {
-        "default": "",
+        "default": "10.49.68.29",
         "description": "DNS Server 1 for the domain",
         "type": "String"
       },
       "DomainDNSServer2": {
-        "default": "",
+        "default": "10.49.68.57",
         "description": "DNS Server 2 for the domain",
         "type": "String"
       },
       "WSFCNode2PrivateIP3": {
-        "default": "10.0.32.102",
+        "default": "",
         "description": "Third private IP for Availability Group Listener on first WSFC Node",
         "type": "String"
       },
       "WSFCNode2NetBIOSName": {
-        "default": "WSFCNode2",
+        "default": "IR-QA-SQL-N002",
         "description": "NetBIOS name of the second WSFC Node (up to 15 characters)",
         "type": "String"
       },
@@ -193,17 +193,17 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "QSS3KeyPrefix": {
-        "default": "quickstart-microsoft-sql/",
+        "default": "",
         "description": "S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).",
         "type": "String"
       },
       "ManagedAD": {
-        "default": "No",
+        "default": "Yes",
         "description": "Active Directory being Managed by AWS",
         "type": "String"
       },
       "WSFCNode1NetBIOSName": {
-        "default": "WSFCNode1",
+        "default": "IR-QA-SQL-N001",
         "description": "NetBIOS name of the first WSFC Node (up to 15 characters)",
         "type": "String"
       },
@@ -218,17 +218,17 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "WSFCNode1PrivateIP1": {
-        "default": "10.0.0.101",
+        "default": "10.49.69.12",
         "description": "Secondary private IP for WSFC cluster on first WSFC Node",
         "type": "String"
       },
       "WSFCNode1PrivateIP2": {
-        "default": "10.0.0.101",
+        "default": "",
         "description": "Secondary private IP for WSFC cluster on first WSFC Node",
         "type": "String"
       },
       "WSFCNode1PrivateIP3": {
-        "default": "10.0.0.102",
+        "default": "",
         "description": "Third private IP for Availability Group Listener on first WSFC Node",
         "type": "String"
       },
@@ -238,17 +238,17 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "QSS3BucketName": {
-        "default": "aws-quickstart",
+        "default": "www.kh-static-pri.net",
         "description": "S3 bucket name for the Quick Start assets. Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
         "type": "String"
       },
       "DomainNetBIOSName": {
-        "default": "example",
+        "default": "kk",
         "description": "NetBIOS name of the domain (up to 15 characters) for users of earlier versions of Windows e.g. EXAMPLE",
         "type": "String"
       },
       "DomainJoinOU": {
-        "default": "NONPROD",
+        "default": "computers",
         "description": "OU the domain",
         "type": "String"
       },
@@ -257,7 +257,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "WSFCNode2PrivateIP1": {
-        "default": "10.0.0.101",
+        "default": "10.49.69.49",
         "description": "Secondary private IP for WSFC cluster on first WSFC Node",
         "type": "String"
       },
@@ -267,7 +267,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       },
      
       "WSFCNode2PrivateIP2": {
-        "default": "10.0.32.101",
+        "default": "",
         "description": "Secondary private IP for WSFC cluster on first WSFC Node",
         "type": "String"
       },
@@ -280,7 +280,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "StackName": {
-        "default": "",
+        "default": "kk",
         "description": "Stack Name Input for cfn resource signal",
         "type": "String"
       },
