@@ -1,3 +1,7 @@
+Install-Module -Name xFailOverCluster 
+Install-Module -Name ActiveDirectoryDsc
+Install-Module -Name PSDscResources 
+
 [CmdletBinding()]
 param(
 
@@ -50,6 +54,13 @@ if ($FileServerNetBIOSName) {
     $ShareName = "\\" + $FileServerNetBIOSName + "." + $DomainDnsName + "\witness"
 }
 
+install-PackageProvider -Name Nuget -MinimumVersion 2.8.5.201 -Force
+Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted # run once
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Unrestricted -Force 
+
+
+
+
 $ConfigurationData = @{
     AllNodes = @(
         @{
@@ -69,6 +80,10 @@ Configuration WSFCNode1Config {
         [PSCredential] $Credentials,
         [PSCredential] $SQLCredentials
     )
+
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 
+    Install-Module -Name xFailOverCluster -RequiredVersion 1.15.0-preview0003 -AllowPrerelease 
+    Install-Module -Name ActiveDirectoryDsc 
 
     Import-Module -Name PSDscResources
     Import-Module -Name xFailOverCluster
