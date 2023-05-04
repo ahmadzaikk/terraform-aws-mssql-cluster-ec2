@@ -423,46 +423,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "action": "aws:runCommand",
         "onFailure": "step:sleepend"
       },
-      {
-        "inputs": {
-          "Parameters": {
-            "sourceInfo": "{\"path\": \"https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/DomainJoin.ps1\"}",
-            "sourceType": "S3",
-            "commandLine": "./DomainJoin.ps1 -DomainNetBIOSName {{DomainNetBIOSName}} -DomainDNSName {{DomainDNSName}} -AdminSecret {{AdminSecrets}} -OU {{DomainJoinOU}}"
-          },
-          "CloudWatchOutputConfig": {
-            "CloudWatchOutputEnabled": "true",
-            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
-          },
-          "InstanceIds": [
-            "{{wsfcfInstanceIds.InstanceIds}}"
-          ],
-          "DocumentName": "AWS-RunRemoteScript"
-        },
-        "name": "wsfcfDomainJoin",
-        "action": "aws:runCommand",
-        "onFailure": "step:sleepend"
-      },
-      {
-        "inputs": {
-          "Parameters": {
-            "commands": [
-              "function DscStatusCheck () {\n    $LCMState = (Get-DscLocalConfigurationManager).LCMState\n    if ($LCMState -eq 'PendingConfiguration' -Or $LCMState -eq 'PendingReboot') {\n        'returning 3010, should continue after reboot'\n        exit 3010\n    } else {\n      'Completed'\n    }\n}\n\nStart-DscConfiguration 'C:\\AWSQuickstart\\DomainJoin' -Wait -Verbose -Force\n\nDscStatusCheck\n"
-            ]
-          },
-          "CloudWatchOutputConfig": {
-            "CloudWatchOutputEnabled": "true",
-            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
-          },
-          "InstanceIds": [
-            "{{wsfcfInstanceIds.InstanceIds}}"
-          ],
-          "DocumentName": "AWS-RunPowerShellScript"
-        },
-        "name": "wsfcfDomainConfig",
-        "action": "aws:runCommand",
-        "onFailure": "step:sleepend"
-      },
+      
       {
         "inputs": {
           "Parameters": {
