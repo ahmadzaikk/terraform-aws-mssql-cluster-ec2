@@ -406,26 +406,6 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       {
         "inputs": {
           "Parameters": {
-            "sourceInfo": "{\"path\": \"https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/Initialize-GPT.ps1\"}",
-            "sourceType": "S3",
-            "commandLine": "./Initialize-GPT.ps1"
-          },
-          "CloudWatchOutputConfig": {
-            "CloudWatchOutputEnabled": "true",
-            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
-          },
-          "InstanceIds": [
-            "{{wsfcfInstanceIds.InstanceIds}}"
-          ],
-          "DocumentName": "AWS-RunRemoteScript"
-        },
-        "name": "wsfcnodefInitializeDisk",
-        "action": "aws:runCommand",
-        "onFailure": "step:sleepend"
-      },
-      {
-        "inputs": {
-          "Parameters": {
             "sourceInfo": "{\"path\": \"https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/LCM-Config.ps1\"}",
             "sourceType": "S3",
             "commandLine": "./LCM-Config.ps1"
