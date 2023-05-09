@@ -145,9 +145,9 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "SQLServerVersion": {
-        "default": "https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/DownloadSQLEE.ps1",
+        "default": "2017",
         "description": "Version of SQL Server to install on Failover Cluster Nodes",
-        "type": "String
+        "type": "String"
       },
       "SQLSecrets": {
         "default": "arn:aws:secretsmanager:us-west-2:944706592399:secret:kk-secret-manager-rIELpH",
@@ -157,7 +157,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       "SQL2017Media": {
         "default": "https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/DownloadSQLEE.ps1",
         "description": "SQL Server 2017 installation media location",
-        "type": "String
+        "type": "String"
       },
       "DomainDNSName": {
         "default": "kk.com",
