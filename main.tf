@@ -145,7 +145,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "SQLServerVersion": {
-        "default": ""https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/DownloadSQLEE.ps1"",
+        "default": "https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/DownloadSQLEE.ps1",
         "description": "Version of SQL Server to install on Failover Cluster Nodes",
         "type": "String
       },
@@ -155,7 +155,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "SQL2017Media": {
-        "default": ""https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/DownloadSQLEE.ps1"",
+        "default": "https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/DownloadSQLEE.ps1",
         "description": "SQL Server 2017 installation media location",
         "type": "String
       },
@@ -255,7 +255,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "SQL2019Media": {
-        "default": ""https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/DownloadSQLEE.ps1"",
+        "default": "https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/DownloadSQLEE.ps1",
         "description": "SQL Server 2019 installation media location",
         "type": "String"
       },
