@@ -140,9 +140,9 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "FSXFileSystemID": {
-        "default": "",
+        "default": "fs-0d5bd472f020e5abb",
         "description": "ID of the FSX File System to be used as a cluster witness",
-        "type": "fs-0d5bd472f020e5abb"
+        "type": "String"
       },
       "SQLServerVersion": {
         "default": ""https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/DownloadSQLEE.ps1"",
