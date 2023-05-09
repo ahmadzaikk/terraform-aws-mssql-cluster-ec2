@@ -150,7 +150,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String
       },
       "SQLSecrets": {
-        "default": "arn:aws:secretsmanager:us-west-2:944706592399:secret:kk-secret-manager-rIELpH"
+        "default": "arn:aws:secretsmanager:us-west-2:944706592399:secret:kk-secret-manager-rIELpH",
         "description": "AWS Secrets Parameter Name that has Password and User namer for the SQL Service Account.",
         "type": "String"
       },
@@ -275,12 +275,12 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "AdminSecrets": {
-        "default": "arn:aws:secretsmanager:us-west-2:944706592399:secret:kk-secret-manager-rIELpH"
+        "default": "arn:aws:secretsmanager:us-west-2:944706592399:secret:kk-secret-manager-rIELpH",
         "description": "AWS Secrets Parameter Name that has Password and User name for a domain administrator.",
         "type": "String"
       },
       "SQLAdminGroup": {
-        "default": "sql-admin
+        "default": "sql-admin,
         "description": "The AD group name for the sql administrators to be added to sys admin role",
         "type": "String"
       },
