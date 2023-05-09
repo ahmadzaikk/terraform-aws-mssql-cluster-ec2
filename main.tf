@@ -150,7 +150,6 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "SQLSecrets": {
-        "default": "arn:aws:secretsmanager:us-west-2:944706592399:secret:kk-secret-manager-rIELpH",
         "description": "AWS Secrets Parameter Name that has Password and User namer for the SQL Service Account.",
         "type": "String"
       },
