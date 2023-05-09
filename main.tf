@@ -140,7 +140,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "FSXFileSystemID": {
-        "default": "fs-0d5bd472f020e5abb",
+        "default": "fs-0f5ccadae69393250",
         "description": "ID of the FSX File System to be used as a cluster witness",
         "type": "String"
       },
@@ -170,12 +170,12 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "DomainDNSServer2": {
-        "default": "10.49.68.57",
+        "default": "10.49.69.57",
         "description": "DNS Server 2 for the domain",
         "type": "String"
       },
       "WSFCNode2PrivateIP3": {
-        "default": "10.49.69.42",
+        "default": "10.49.69.45",
         "description": "Third private IP for Availability Group Listener on first WSFC Node",
         "type": "String"
       },
@@ -220,7 +220,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "WSFCNode1PrivateIP1": {
-        "default": "10.49.69.5",
+        "default": "10.49.69.16",
         "description": "Secondary private IP for WSFC cluster on first WSFC Node",
         "type": "String"
       },
@@ -230,7 +230,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "WSFCNode1PrivateIP3": {
-        "default": "10.49.69.15",
+        "default": "10.49.69.26",
         "description": "Third private IP for Availability Group Listener on first WSFC Node",
         "type": "String"
       },
@@ -260,7 +260,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "WSFCNode2PrivateIP1": {
-        "default": "10.49.69.40",
+        "default": "10.49.69.41",
         "description": "Secondary private IP for WSFC cluster on first WSFC Node",
         "type": "String"
       },
@@ -271,7 +271,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       },
      
       "WSFCNode2PrivateIP2": {
-        "default": "10.49.69.59",
+        "default": "10.49.69.56",
         "description": "Secondary private IP for WSFC cluster on first WSFC Node",
         "type": "String"
       },
