@@ -140,6 +140,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "FSXFileSystemID": {
+        "default": "fs-0d5bd472f020e5abb",
         "description": "ID of the FSX File System to be used as a cluster witness",
         "type": "String"
       },
@@ -149,10 +150,12 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "SQLSecrets": {
+        "default": "arn:aws:secretsmanager:us-west-2:944706592399:secret:kk-secret-manager-rIELpH",
         "description": "AWS Secrets Parameter Name that has Password and User namer for the SQL Service Account.",
         "type": "String"
       },
       "SQL2017Media": {
+        "default": "https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/Install-SQLEE.ps1\",
         "description": "SQL Server 2017 installation media location",
         "type": "String"
       },
@@ -252,6 +255,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "SQL2019Media": {
+        "default": "https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/Install-SQLEE.ps1\",
         "description": "SQL Server 2019 installation media location",
         "type": "String"
       },
@@ -261,6 +265,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "SQL2016Media": {
+        "default": "https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/Install-SQLEE.ps1\",
         "description": "SQL Server 2016 installation media location",
         "type": "String"
       },
@@ -271,6 +276,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "AdminSecrets": {
+        "default": "arn:aws:secretsmanager:us-west-2:944706592399:secret:kk-secret-manager-rIELpH",
         "description": "AWS Secrets Parameter Name that has Password and User name for a domain administrator.",
         "type": "String"
       },
