@@ -155,7 +155,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       },
       "SQL2017Media": {
         "description": "SQL Server 2017 installation media location",
-        "type": "https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/DownloadSQLEE.ps1""
+        "type": "https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/DownloadSQLEE.ps1"
       },
       "DomainDNSName": {
         "default": "kk.com",
