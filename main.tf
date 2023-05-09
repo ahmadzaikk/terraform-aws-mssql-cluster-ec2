@@ -140,7 +140,6 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "FSXFileSystemID": {
-        "default": "fs-0d5bd472f020e5abb",
         "description": "ID of the FSX File System to be used as a cluster witness",
         "type": "String"
       },
@@ -276,7 +275,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "SQLAdminGroup": {
-        "default": "sql-admin,
+        "default": "sql-admin",
         "description": "The AD group name for the sql administrators to be added to sys admin role",
         "type": "String"
       },
