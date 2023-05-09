@@ -145,17 +145,19 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "fs-0d5bd472f020e5abb"
       },
       "SQLServerVersion": {
-        "default": "2017",
+        "default": ""https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/DownloadSQLEE.ps1"",
         "description": "Version of SQL Server to install on Failover Cluster Nodes",
-        "type": "https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/DownloadSQLEE.ps1"
+        "type": "String
       },
       "SQLSecrets": {
+        "default": "arn:aws:secretsmanager:us-west-2:944706592399:secret:kk-secret-manager-rIELpH"
         "description": "AWS Secrets Parameter Name that has Password and User namer for the SQL Service Account.",
-        "type": "arn:aws:secretsmanager:us-west-2:944706592399:secret:kk-secret-manager-rIELpH"
+        "type": "String"
       },
       "SQL2017Media": {
+        "default": ""https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/DownloadSQLEE.ps1"",
         "description": "SQL Server 2017 installation media location",
-        "type": "https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/DownloadSQLEE.ps1"
+        "type": "String
       },
       "DomainDNSName": {
         "default": "kk.com",
@@ -253,6 +255,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "SQL2019Media": {
+        "default": ""https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/DownloadSQLEE.ps1"",
         "description": "SQL Server 2019 installation media location",
         "type": "String"
       },
@@ -272,12 +275,14 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "AdminSecrets": {
+        "default": "arn:aws:secretsmanager:us-west-2:944706592399:secret:kk-secret-manager-rIELpH"
         "description": "AWS Secrets Parameter Name that has Password and User name for a domain administrator.",
-        "type": "arn:aws:secretsmanager:us-west-2:944706592399:secret:kk-secret-manager-rIELpH"
+        "type": "String"
       },
       "SQLAdminGroup": {
+        "default": "sql-admin
         "description": "The AD group name for the sql administrators to be added to sys admin role",
-        "type": "sql-admin"
+        "type": "String"
       },
       "StackName": {
         "default": "kk",
