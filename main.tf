@@ -142,20 +142,20 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       "FSXFileSystemID": {
         "default": "",
         "description": "ID of the FSX File System to be used as a cluster witness",
-        "type": "String"
+        "type": "fs-0d5bd472f020e5abb"
       },
       "SQLServerVersion": {
         "default": "2017",
         "description": "Version of SQL Server to install on Failover Cluster Nodes",
-        "type": "String"
+        "type": "https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/DownloadSQLEE.ps1"
       },
       "SQLSecrets": {
         "description": "AWS Secrets Parameter Name that has Password and User namer for the SQL Service Account.",
-        "type": "String"
+        "type": "arn:aws:secretsmanager:us-west-2:944706592399:secret:kk-secret-manager-rIELpH"
       },
       "SQL2017Media": {
         "description": "SQL Server 2017 installation media location",
-        "type": "String"
+        "type": "https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/DownloadSQLEE.ps1""
       },
       "DomainDNSName": {
         "default": "kk.com",
@@ -173,7 +173,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "WSFCNode2PrivateIP3": {
-        "default": "10.49.69.62",
+        "default": "10.49.69.42",
         "description": "Third private IP for Availability Group Listener on first WSFC Node",
         "type": "String"
       },
@@ -218,12 +218,12 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "WSFCNode1PrivateIP1": {
-        "default": "10.49.69.12",
+        "default": "10.49.69.5",
         "description": "Secondary private IP for WSFC cluster on first WSFC Node",
         "type": "String"
       },
       "WSFCNode1PrivateIP2": {
-        "default": "10.49.69.28",
+        "default": "10.49.69.22",
         "description": "Secondary private IP for WSFC cluster on first WSFC Node",
         "type": "String"
       },
@@ -257,7 +257,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "WSFCNode2PrivateIP1": {
-        "default": "10.49.69.49",
+        "default": "10.49.69.40",
         "description": "Secondary private IP for WSFC cluster on first WSFC Node",
         "type": "String"
       },
@@ -267,17 +267,17 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       },
      
       "WSFCNode2PrivateIP2": {
-        "default": "10.49.69.62",
+        "default": "10.49.69.59",
         "description": "Secondary private IP for WSFC cluster on first WSFC Node",
         "type": "String"
       },
       "AdminSecrets": {
         "description": "AWS Secrets Parameter Name that has Password and User name for a domain administrator.",
-        "type": "String"
+        "type": "arn:aws:secretsmanager:us-west-2:944706592399:secret:kk-secret-manager-rIELpH"
       },
       "SQLAdminGroup": {
         "description": "The AD group name for the sql administrators to be added to sys admin role",
-        "type": "String"
+        "type": "sql-admin"
       },
       "StackName": {
         "default": "kk",
