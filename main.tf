@@ -155,7 +155,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "SQL2017Media": {
-        "default": "https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/Install-SQLEE.ps1\",
+        "default": "https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/Install-SQLEE.ps1",
         "description": "SQL Server 2017 installation media location",
         "type": "String"
       },
@@ -255,7 +255,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "SQL2019Media": {
-        "default": "https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/Install-SQLEE.ps1\",
+        "default": "https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/Install-SQLEE.ps1",
         "description": "SQL Server 2019 installation media location",
         "type": "String"
       },
@@ -265,7 +265,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "SQL2016Media": {
-        "default": "https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/Install-SQLEE.ps1\",
+        "default": "https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/Install-SQLEE.ps1",
         "description": "SQL Server 2016 installation media location",
         "type": "String"
       },
