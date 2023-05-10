@@ -130,7 +130,7 @@ Configuration WSFCNode1Config {
             Name                          =  $ClusterName
             StaticIPAddress               =  $WSFCNode1PrivateIP2
             DomainAdministratorCredential =  $Credentials
-            DependsOn                     = '[Group]Administrators'
+            DependsOn                     = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature' 
         }
 
         if ($FSXFileSystemID) {
