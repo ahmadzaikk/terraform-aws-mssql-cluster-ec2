@@ -140,7 +140,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "FSXFileSystemID": {
-        "default": "fs-0f5ccadae69393250",
+        "default": "fs-09fff54ac25103748",
         "description": "ID of the FSX File System to be used as a cluster witness",
         "type": "String"
       },
@@ -175,7 +175,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "WSFCNode2PrivateIP3": {
-        "default": "10.49.69.45",
+        "default": "10.49.69.62",
         "description": "Third private IP for Availability Group Listener on first WSFC Node",
         "type": "String"
       },
@@ -220,17 +220,17 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "WSFCNode1PrivateIP1": {
-        "default": "10.49.69.16",
+        "default": "10.49.69.6",
         "description": "Secondary private IP for WSFC cluster on first WSFC Node",
         "type": "String"
       },
       "WSFCNode1PrivateIP2": {
-        "default": "10.49.69.22",
+        "default": "10.49.69.27",
         "description": "Secondary private IP for WSFC cluster on first WSFC Node",
         "type": "String"
       },
       "WSFCNode1PrivateIP3": {
-        "default": "10.49.69.26",
+        "default": "10.49.69.11",
         "description": "Third private IP for Availability Group Listener on first WSFC Node",
         "type": "String"
       },
@@ -260,7 +260,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "WSFCNode2PrivateIP1": {
-        "default": "10.49.69.41",
+        "default": "10.49.69.49",
         "description": "Secondary private IP for WSFC cluster on first WSFC Node",
         "type": "String"
       },
@@ -271,7 +271,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       },
      
       "WSFCNode2PrivateIP2": {
-        "default": "10.49.69.56",
+        "default": "10.49.69.38",
         "description": "Secondary private IP for WSFC cluster on first WSFC Node",
         "type": "String"
       },
