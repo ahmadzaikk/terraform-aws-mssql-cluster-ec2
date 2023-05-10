@@ -16,6 +16,12 @@ param(
     [Parameter(Mandatory=$true)]
     [string]$AdminSecret,
 
+    [Parameter(Mandatory=$true)]
+    [string]$SQLSecret,
+
+    [Parameter(Mandatory=$false)]
+    [string]$FSXFileSystemID,
+
     [Parameter(Mandatory=$false)]
     [string]$FileServerNetBIOSName
 
@@ -25,12 +31,23 @@ param(
 $DscCertThumbprint = (get-childitem -path cert:\LocalMachine\My | where { $_.subject -eq "CN=AWSQSDscEncryptCert" }).Thumbprint
 # Getting Password from Secrets Manager for AD Admin User
 $AdminUser = ConvertFrom-Json -InputObject (Get-SECSecretValue -SecretId $AdminSecret).SecretString
+$SQLUser = ConvertFrom-Json -InputObject (Get-SECSecretValue -SecretId $SQLSecret).SecretString
 $ClusterAdminUser = $DomainNetBIOSName + '\' + $AdminUser.UserName
+$SQLAdminUser = $DomainNetBIOSName + '\' + $SQLUser.UserName
 # Creating Credential Object for Administrator
 $Credentials = (New-Object PSCredential($ClusterAdminUser,(ConvertTo-SecureString $AdminUser.Password -AsPlainText -Force)))
+$SQLCredentials = (New-Object PSCredential($SQLAdminUser,(ConvertTo-SecureString $SQLUser.Password -AsPlainText -Force)))
+
+if ($FSXFileSystemID) {
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+    Install-Module -Name AWSPowerShell -Confirm:$false -Force
+    $DnsName = Get-FSxFileSystem -FileSystemId $FSXFileSystemID | Select DnsName -ExpandProperty DnsName
+    $ShareName = "\\" + $DnsName + "\share"
+}
 
 if ($FileServerNetBIOSName) {
-    $ShareName = "\\" + $FileServerNetBIOSName + "\SqlWitnessShare"
+    $ShareName = "\\" + $FileServerNetBIOSName + "." + $DomainDnsName + "\witness"
 }
 
 $ConfigurationData = @{
@@ -49,16 +66,17 @@ $ConfigurationData = @{
 
 Configuration WSFCNode1Config {
     param(
-        [PSCredential] $Credentials
+        [PSCredential] $Credentials,
+        [PSCredential] $SQLCredentials
     )
 
     Import-Module -Name PSDscResources
     Import-Module -Name xFailOverCluster
-    Import-Module -Name xActiveDirectory
+    Import-Module -Name ActiveDirectoryDsc
     
     Import-DscResource -Module PSDscResources
     Import-DscResource -ModuleName xFailOverCluster
-    Import-DscResource -ModuleName xActiveDirectory
+    Import-DscResource -ModuleName ActiveDirectoryDsc
     
     Node 'localhost' {
         WindowsFeature RSAT-AD-PowerShell {
@@ -89,15 +107,33 @@ Configuration WSFCNode1Config {
             Name      = 'RSAT-Clustering-CmdInterface'
             DependsOn = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringPowerShellFeature'
         }
+        
+        ADUser SQLServiceAccount {
+            DomainName = $DomainDnsName
+            UserName = $SQLUser.UserName
+            Password = $SQLCredentials
+            DisplayName = $SQLUser.UserName
+            PasswordAuthentication = 'Negotiate'
+            PsDscRunAsCredential = $Credentials
+            Ensure = 'Present'
+            DependsOn = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature' 
+        }
+
+        Group Administrators {
+            GroupName = 'Administrators'
+            Ensure = 'Present'
+            MembersToInclude = @($ClusterAdminUser, $SQLAdminUser)
+            DependsOn = "[ADUser]SQLServiceAccount"
+        }
 
         xCluster CreateCluster {
             Name                          =  $ClusterName
             StaticIPAddress               =  $WSFCNode1PrivateIP2
             DomainAdministratorCredential =  $Credentials
-            DependsOn                     = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature' 
+            DependsOn                     = '[Group]Administrators'
         }
 
-        if ($FileServerNetBIOSName) {
+        if ($FSXFileSystemID) {
             xClusterQuorum 'SetQuorumToNodeAndFileShareMajority' {
                 IsSingleInstance = 'Yes'
                 Type             = 'NodeAndFileShareMajority'
@@ -114,4 +150,4 @@ Configuration WSFCNode1Config {
     }
 }
     
-WSFCNode1Config -OutputPath 'C:\AWSQuickstart\WSFCNode1Config' -ConfigurationData $ConfigurationData -Credentials $Credentials
+WSFCNode1Config -OutputPath 'C:\AWSQuickstart\WSFCNode1Config' -ConfigurationData $ConfigurationData -Credentials $Credentials -SQLCredentials $SQLCredentials
