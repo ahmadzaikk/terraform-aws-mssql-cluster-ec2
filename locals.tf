@@ -62,7 +62,7 @@ data "template_file" "ssmautomation" {
     WSFCNode2PrivateIP1             = tolist(data.aws_network_interface.node2.private_ips)[0]
     WSFCNode2PrivateIP2             = tolist(data.aws_network_interface.node2.private_ips)[1]
     WSFCNode2PrivateIP3             = tolist(data.aws_network_interface.node2.private_ips)[2]
-    FSXFileSystem                   = aws_fsx_windows_file_system.fsx.id
+    FSXFileSystem                   = "fs-054b1cad80f0e33c1"
     ClusterName                     = var.cluster_name
     AvailabiltyGroupName            = var.availability_group_name
     AvailabiltyGroupListenerName    = var.availability_group_listener_name
