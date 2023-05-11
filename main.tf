@@ -140,7 +140,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "FSXFileSystemID": {
-        "default": "fs-09fff54ac25103748",
+        "default": "fs-054b1cad80f0e33c1",
         "description": "ID of the FSX File System to be used as a cluster witness",
         "type": "String"
       },
@@ -180,17 +180,17 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "WSFCNode2NetBIOSName": {
-        "default": "IR-QA-SQL-N002",
+        "default": "sql-2",
         "description": "NetBIOS name of the second WSFC Node (up to 15 characters)",
         "type": "String"
       },
       "AvailabiltyGroupName": {
-        "default": "SQLAG1",
+        "default": "sql-AG-01",
         "description": "NetBIOS name of the Availablity Group (up to 15 characters)",
         "type": "String"
       },
       "AvailabiltyGroupListenerName": {
-        "default": "SQLAGL1",
+        "default": "sql-AG-L01",
         "description": "NetBIOS name of the Availablity Group (up to 15 characters)",
         "type": "String"
       },
@@ -205,12 +205,12 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "WSFCNode1NetBIOSName": {
-        "default": "IR-QA-SQL-N001",
+        "default": "sql-1`",
         "description": "NetBIOS name of the first WSFC Node (up to 15 characters)",
         "type": "String"
       },
       "ClusterName": {
-        "default": "WSFCCluster1",
+        "default": "sqlclus01",
         "description": "NetBIOS name of the Cluster (up to 15 characters)",
         "type": "String"
       },
