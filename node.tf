@@ -286,7 +286,7 @@ resource "aws_instance" "node_2" {
   lifecycle {
     ignore_changes = [user_data]
   }  
-  depends_on              = [aws_instance.node_1, aws_fsx_windows_file_system.fsx, aws_ssm_document.aws_quickstart_mssql]
+  depends_on              = [aws_instance.node_1, aws_ssm_document.aws_quickstart_mssql]
 }
 
 resource "aws_ebs_volume" "node1_volume1" {
