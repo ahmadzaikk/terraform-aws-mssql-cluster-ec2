@@ -146,6 +146,12 @@ Configuration WSFCNode1Config {
                 Type             = 'NodeMajority'
                 DependsOn        = '[xCluster]CreateCluster'
             }
+        } else {
+            xClusterQuorum 'SetQuorumToNodeMajority' {
+                IsSingleInstance = 'Yes'
+                Type             = 'NodeMajority'
+                DependsOn        = '[xCluster]CreateCluster'
+            }
         }
     }
 }
