@@ -180,17 +180,17 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "WSFCNode2NetBIOSName": {
-        "default": "sqlno-2",
+        "default": "sqlnod-2",
         "description": "NetBIOS name of the second WSFC Node (up to 15 characters)",
         "type": "String"
       },
       "AvailabiltyGroupName": {
-        "default": "sql-AGst-01",
+        "default": "sql-AG-1",
         "description": "NetBIOS name of the Availablity Group (up to 15 characters)",
         "type": "String"
       },
       "AvailabiltyGroupListenerName": {
-        "default": "sql-AGst-L01",
+        "default": "sql-AG-L1",
         "description": "NetBIOS name of the Availablity Group (up to 15 characters)",
         "type": "String"
       },
@@ -210,7 +210,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "ClusterName": {
-        "default": "sqlcl01",
+        "default": "clustersql",
         "description": "NetBIOS name of the Cluster (up to 15 characters)",
         "type": "String"
       },
