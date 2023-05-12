@@ -467,7 +467,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         },
         "name": "updatednsIP",
         "action": "aws:runCommand",
-        "onFailure": "Abort"
+        "onFailure": "step:sleepend"
       },
       {
         "inputs": {
@@ -507,7 +507,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         },
         "name": "AddSqlusr",
         "action": "aws:runCommand",
-        "onFailure": "Abort"
+        "onFailure": "step:sleepend"
       },
       {
         "inputs": {
