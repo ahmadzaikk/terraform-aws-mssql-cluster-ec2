@@ -491,6 +491,26 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       },
       {
         "inputs": {
+        "Parameters": {
+          "sourceInfo": "{\"path\": \"https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/adduser.ps1\"}",
+          "sourceType": "S3",
+          "commandLine": "./adduser.ps1 -SQLSecrets {{SQLSecrets}}"
+        },
+        "CloudWatchOutputConfig": {
+          "CloudWatchOutputEnabled": "true",
+          "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+        },
+        "InstanceIds": [
+          "{{wsfcfInstanceIds.InstanceIds}}"
+        ],
+        "DocumentName": "AWS-RunRemoteScript"
+      },
+      "name": "addsqluser",
+      "action": "aws:runCommand",
+      "onFailure": "Abort"
+      },
+      {
+        "inputs": {
           "Parameters": {
             "commands": [
               "function DscStatusCheck () {\n    $LCMState = (Get-DscLocalConfigurationManager).LCMState\n    if ($LCMState -eq 'PendingConfiguration' -Or $LCMState -eq 'PendingReboot') {\n        'returning 3010, should continue after reboot'\n        exit 3010\n    } else {\n      'Completed'\n    }\n}\n\nStart-DscConfiguration 'C:\\AWSQuickstart\\DomainJoin' -Wait -Verbose -Force\n\nDscStatusCheck\n"
