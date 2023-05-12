@@ -534,7 +534,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "Parameters": {
           "sourceInfo": "{\"path\": \"https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/addadminuser.ps1\"}",
           "sourceType": "S3",
-          "commandLine": "./adduseradmin.ps1 -AdminSecret {{AdminSecret}}"
+          "commandLine": "./adduseradmin.ps1 -AdminSecrets {{AdminSecrets}}"
         },
         "CloudWatchOutputConfig": {
           "CloudWatchOutputEnabled": "true",
