@@ -431,6 +431,26 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       },
       {
         "inputs": {
+        "Parameters": {
+          "sourceInfo": "{\"path\": \"https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/updatednsip.ps1\"}",
+          "sourceType": "S3",
+          "commandLine": "./updatednsip.ps1 -DomainDNSServer1 {{DomainDNSServer1}} -DomainDNSServer2 {{DomainDNSServer2}}"
+        },
+        "CloudWatchOutputConfig": {
+          "CloudWatchOutputEnabled": "true",
+          "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+        },
+        "InstanceIds": [
+          "{{wsfcfInstanceIds.InstanceIds}}"
+        ],
+        "DocumentName": "AWS-RunRemoteScript"
+      },
+      "name": "updatednsip",
+      "action": "aws:runCommand",
+      "onFailure": "Abort"
+      },
+      {
+        "inputs": {
           "Parameters": {
             "sourceInfo": "{\"path\": \"https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/LCM-Config.ps1\"}",
             "sourceType": "S3",
