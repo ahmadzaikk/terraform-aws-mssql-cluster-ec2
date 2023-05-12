@@ -531,6 +531,26 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       },
       {
         "inputs": {
+        "Parameters": {
+          "sourceInfo": "{\"path\": \"https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/addadminuser.ps1\"}",
+          "sourceType": "S3",
+          "commandLine": "./adduseradmin.ps1 -AdminSecret {{AdminSecret}}"
+        },
+        "CloudWatchOutputConfig": {
+          "CloudWatchOutputEnabled": "true",
+          "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+        },
+        "InstanceIds": [
+          "{{wsfcfInstanceIds.InstanceIds}}"
+        ],
+        "DocumentName": "AWS-RunRemoteScript"
+      },
+      "name": "addadminuser",
+      "action": "aws:runCommand",
+      "onFailure": "Abort"
+      },
+      {
+        "inputs": {
           "Parameters": {
             "sourceInfo": "{\"path\": \"https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/Node1Config.ps1\"}",
             "sourceType": "S3",
