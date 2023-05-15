@@ -392,86 +392,6 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       {
         "inputs": {
           "Parameters": {
-            "sourceInfo": "{\"path\": \"https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/install-sql-modules.ps1\"}",
-            "sourceType": "S3",
-            "commandLine": "./install-sql-modules.ps1"
-          },
-          "CloudWatchOutputConfig": {
-            "CloudWatchOutputEnabled": "true",
-            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
-          },
-          "InstanceIds": [
-            "{{wsfcfInstanceIds.InstanceIds}}"
-          ],
-          "DocumentName": "AWS-RunRemoteScript"
-        },
-        "name": "wsfcfInstallDscModules",
-        "action": "aws:runCommand",
-        "onFailure": "step:sleepend"
-      },
-      {
-        "inputs": {
-          "Parameters": {
-            "sourceInfo": "{\"path\": \"https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/Initialize-GPT.ps1\"}",
-            "sourceType": "S3",
-            "commandLine": "./Initialize-GPT.ps1"
-          },
-          "CloudWatchOutputConfig": {
-            "CloudWatchOutputEnabled": "true",
-            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
-          },
-          "InstanceIds": [
-            "{{wsfcfInstanceIds.InstanceIds}}"
-          ],
-          "DocumentName": "AWS-RunRemoteScript"
-        },
-        "name": "wsfcnodefInitializeDisk",
-        "action": "aws:runCommand",
-        "onFailure": "step:sleepend"
-      },
-      {
-        "inputs": {
-        "Parameters": {
-          "sourceInfo": "{\"path\": \"https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/updatednsip.ps1\"}",
-          "sourceType": "S3",
-          "commandLine": "./updatednsip.ps1 -DomainDNSServer1 {{DomainDNSServer1}} -DomainDNSServer2 {{DomainDNSServer2}}"
-        },
-        "CloudWatchOutputConfig": {
-          "CloudWatchOutputEnabled": "true",
-          "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
-        },
-        "InstanceIds": [
-          "{{wsfcfInstanceIds.InstanceIds}}"
-        ],
-        "DocumentName": "AWS-RunRemoteScript"
-      },
-      "name": "updatednsip",
-      "action": "aws:runCommand",
-      "onFailure": "Abort"
-      },
-      {
-        "inputs": {
-          "Parameters": {
-            "sourceInfo": "{\"path\": \"https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/LCM-Config.ps1\"}",
-            "sourceType": "S3",
-            "commandLine": "./LCM-Config.ps1"
-          },
-          "CloudWatchOutputConfig": {
-            "CloudWatchOutputEnabled": "true",
-            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
-          },
-          "InstanceIds": [
-            "{{wsfcfInstanceIds.InstanceIds}}"
-          ],
-          "DocumentName": "AWS-RunRemoteScript"
-        },
-        "name": "wsfcfLCMConfig",
-        "action": "aws:runCommand",
-        "onFailure": "step:sleepend"
-      },
-      {
-        "inputs": {
-          "Parameters": {
             "sourceInfo": "{\"path\": \"https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/DomainJoin.ps1\"}",
             "sourceType": "S3",
             "commandLine": "./DomainJoin.ps1 -DomainNetBIOSName {{DomainNetBIOSName}} -DomainDNSName {{DomainDNSName}} -AdminSecret {{AdminSecrets}} -OU {{DomainJoinOU}}"
@@ -549,6 +469,87 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       "action": "aws:runCommand",
       "onFailure": "Abort"
       },
+      {
+        "inputs": {
+          "Parameters": {
+            "sourceInfo": "{\"path\": \"https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/install-sql-modules.ps1\"}",
+            "sourceType": "S3",
+            "commandLine": "./install-sql-modules.ps1"
+          },
+          "CloudWatchOutputConfig": {
+            "CloudWatchOutputEnabled": "true",
+            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+          },
+          "InstanceIds": [
+            "{{wsfcfInstanceIds.InstanceIds}}"
+          ],
+          "DocumentName": "AWS-RunRemoteScript"
+        },
+        "name": "wsfcfInstallDscModules",
+        "action": "aws:runCommand",
+        "onFailure": "step:sleepend"
+      },
+      {
+        "inputs": {
+          "Parameters": {
+            "sourceInfo": "{\"path\": \"https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/Initialize-GPT.ps1\"}",
+            "sourceType": "S3",
+            "commandLine": "./Initialize-GPT.ps1"
+          },
+          "CloudWatchOutputConfig": {
+            "CloudWatchOutputEnabled": "true",
+            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+          },
+          "InstanceIds": [
+            "{{wsfcfInstanceIds.InstanceIds}}"
+          ],
+          "DocumentName": "AWS-RunRemoteScript"
+        },
+        "name": "wsfcnodefInitializeDisk",
+        "action": "aws:runCommand",
+        "onFailure": "step:sleepend"
+      },
+      {
+        "inputs": {
+        "Parameters": {
+          "sourceInfo": "{\"path\": \"https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/updatednsip.ps1\"}",
+          "sourceType": "S3",
+          "commandLine": "./updatednsip.ps1 -DomainDNSServer1 {{DomainDNSServer1}} -DomainDNSServer2 {{DomainDNSServer2}}"
+        },
+        "CloudWatchOutputConfig": {
+          "CloudWatchOutputEnabled": "true",
+          "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+        },
+        "InstanceIds": [
+          "{{wsfcfInstanceIds.InstanceIds}}"
+        ],
+        "DocumentName": "AWS-RunRemoteScript"
+      },
+      "name": "updatednsip",
+      "action": "aws:runCommand",
+      "onFailure": "Abort"
+      },
+      {
+        "inputs": {
+          "Parameters": {
+            "sourceInfo": "{\"path\": \"https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/LCM-Config.ps1\"}",
+            "sourceType": "S3",
+            "commandLine": "./LCM-Config.ps1"
+          },
+          "CloudWatchOutputConfig": {
+            "CloudWatchOutputEnabled": "true",
+            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+          },
+          "InstanceIds": [
+            "{{wsfcfInstanceIds.InstanceIds}}"
+          ],
+          "DocumentName": "AWS-RunRemoteScript"
+        },
+        "name": "wsfcfLCMConfig",
+        "action": "aws:runCommand",
+        "onFailure": "step:sleepend"
+      },
+      
       {
         "inputs": {
           "Parameters": {
