@@ -392,6 +392,26 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       {
         "inputs": {
           "Parameters": {
+            "sourceInfo": "{\"path\": \"https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/install-sql-modules.ps1\"}",
+            "sourceType": "S3",
+            "commandLine": "./install-sql-modules.ps1"
+          },
+          "CloudWatchOutputConfig": {
+            "CloudWatchOutputEnabled": "true",
+            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+          },
+          "InstanceIds": [
+            "{{wsfcfInstanceIds.InstanceIds}}"
+          ],
+          "DocumentName": "AWS-RunRemoteScript"
+        },
+        "name": "wsfcfInstallDscModules",
+        "action": "aws:runCommand",
+        "onFailure": "step:sleepend"
+      },
+      {
+        "inputs": {
+          "Parameters": {
             "sourceInfo": "{\"path\": \"https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/DomainJoin.ps1\"}",
             "sourceType": "S3",
             "commandLine": "./DomainJoin.ps1 -DomainNetBIOSName {{DomainNetBIOSName}} -DomainDNSName {{DomainDNSName}} -AdminSecret {{AdminSecrets}} -OU {{DomainJoinOU}}"
