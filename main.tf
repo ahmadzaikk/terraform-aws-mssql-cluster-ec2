@@ -651,69 +651,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "name": "SqlInstallBranch",
         "action": "aws:branch"
       },
-      {
-        "inputs": {
-          "Parameters": {
-            "sourceInfo": "{\"path\": \"https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/DownloadSQLEE.ps1\"}",
-            "sourceType": "S3",
-            "commandLine": "./DownloadSQLEE.ps1 -SQLServerVersion {{SQLServerVersion}} -SQL2016Media {{SQL2016Media}} -SQL2017Media {{SQL2017Media}} -SQL2019Media {{SQL2019Media}}"
-          },
-          "CloudWatchOutputConfig": {
-            "CloudWatchOutputEnabled": "true",
-            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
-          },
-          "InstanceIds": [
-            "{{wsfcNode1InstanceId.InstanceId}}",
-            "{{wsfcNode2InstanceId.InstanceId}}"
-          ],
-          "DocumentName": "AWS-RunRemoteScript"
-        },
-        "name": "2NodeDownloadSQL",
-        "action": "aws:runCommand",
-        "onFailure": "step:sleepend"
-      },
-      {
-        "inputs": {
-          "Parameters": {
-            "sourceInfo": "{\"path\": \"https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/Install-SQLEE.ps1\"}",
-            "sourceType": "S3",
-            "commandLine": "./Install-SQLEE.ps1 -DomainNetBIOSName {{DomainNetBIOSName}} -DomainDNSName {{DomainDNSName}} -AdminSecret {{AdminSecrets}} -SQLServerVersion {{SQLServerVersion}} -SQLSecret {{SQLSecrets}} -SQLAdminGroup {{SQLAdminGroup}}"
-          },
-          "CloudWatchOutputConfig": {
-            "CloudWatchOutputEnabled": "true",
-            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
-          },
-          "InstanceIds": [
-            "{{wsfcNode1InstanceId.InstanceId}}",
-            "{{wsfcNode2InstanceId.InstanceId}}"
-          ],
-          "DocumentName": "AWS-RunRemoteScript"
-        },
-        "name": "2NodeSQLInstallMOF",
-        "action": "aws:runCommand",
-        "onFailure": "step:sleepend"
-      },
-      {
-        "inputs": {
-          "Parameters": {
-            "commands": [
-              "function DscStatusCheck () {\n    $LCMState = (Get-DscLocalConfigurationManager).LCMState\n    if ($LCMState -eq 'PendingConfiguration' -Or $LCMState -eq 'PendingReboot') {\n        'returning 3010, should continue after reboot'\n        exit 3010\n    } else {\n      'Completed'\n    }\n}\n\nStart-DscConfiguration 'C:\\AWSQuickstart\\SQLInstall' -Wait -Verbose -Force\n\nDscStatusCheck\n"
-            ]
-          },
-          "CloudWatchOutputConfig": {
-            "CloudWatchOutputEnabled": "true",
-            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
-          },
-          "InstanceIds": [
-            "{{wsfcNode1InstanceId.InstanceId}}",
-            "{{wsfcNode2InstanceId.InstanceId}}"
-          ],
-          "DocumentName": "AWS-RunPowerShellScript"
-        },
-        "name": "2NodeSQLInstall",
-        "action": "aws:runCommand",
-        "onFailure": "step:sleepend"
-      },
+      
       {
         "inputs": {
           "Parameters": {
