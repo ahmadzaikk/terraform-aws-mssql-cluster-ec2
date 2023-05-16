@@ -154,7 +154,11 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "description": "AWS Secrets Parameter Name that has Password and User namer for the SQL Service Account.",
         "type": "String"
       },
-      
+      "SQL2017Media": {
+        "default": "https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/Install-SQLEE.ps1",
+        "description": "SQL Server 2017 installation media location",
+        "type": "String"
+      },
       "DomainDNSName": {
         "default": "kk.com",
         "description": "Fully qualified domain name (FQDN) of the forest root domain e.g. example.com",
@@ -250,7 +254,11 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "description": "OU the domain",
         "type": "String"
       },
-     
+      "SQL2019Media": {
+        "default": "https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/Install-SQLEE.ps1",
+        "description": "SQL Server 2019 installation media location",
+        "type": "String"
+      },
       "WSFCNode2PrivateIP1": {
         "default": "10.49.69.43",
         "description": "Secondary private IP for WSFC cluster on first WSFC Node",
