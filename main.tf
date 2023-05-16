@@ -175,12 +175,12 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "WSFCNode2PrivateIP3": {
-        "default": "10.49.69.58",
+        "default": "10.49.69.61",
         "description": "Third private IP for Availability Group Listener on first WSFC Node",
         "type": "String"
       },
       "WSFCNode2NetBIOSName": {
-        "default": "knod-02",
+        "default": "knod-002",
         "description": "NetBIOS name of the second WSFC Node (up to 15 characters)",
         "type": "String"
       },
@@ -205,7 +205,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "WSFCNode1NetBIOSName": {
-        "default": "knod-01",
+        "default": "knod-001",
         "description": "NetBIOS name of the first WSFC Node (up to 15 characters)",
         "type": "String"
       },
@@ -220,17 +220,17 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "WSFCNode1PrivateIP1": {
-        "default": "10.49.69.6",
+        "default": "10.49.69.7",
         "description": "Secondary private IP for WSFC cluster on first WSFC Node",
         "type": "String"
       },
       "WSFCNode1PrivateIP2": {
-        "default": "10.49.69.22",
+        "default": "10.49.69.8",
         "description": "Secondary private IP for WSFC cluster on first WSFC Node",
         "type": "String"
       },
       "WSFCNode1PrivateIP3": {
-        "default": "10.49.69.15",
+        "default": "10.49.69.14",
         "description": "Third private IP for Availability Group Listener on first WSFC Node",
         "type": "String"
       },
@@ -260,7 +260,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "WSFCNode2PrivateIP1": {
-        "default": "10.49.69.49",
+        "default": "10.49.69.40",
         "description": "Secondary private IP for WSFC cluster on first WSFC Node",
         "type": "String"
       },
@@ -271,7 +271,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       },
      
       "WSFCNode2PrivateIP2": {
-        "default": "10.49.69.48",
+        "default": "10.49.69.61",
         "description": "Secondary private IP for WSFC cluster on first WSFC Node",
         "type": "String"
       },
@@ -286,7 +286,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "StackName": {
-        "default": "kkak",
+        "default": "kkakk",
         "description": "Stack Name Input for cfn resource signal",
         "type": "String"
       },
