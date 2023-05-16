@@ -180,7 +180,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "WSFCNode2NetBIOSName": {
-        "default": "knod-002",
+        "default": "hnod-002",
         "description": "NetBIOS name of the second WSFC Node (up to 15 characters)",
         "type": "String"
       },
@@ -205,12 +205,12 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "WSFCNode1NetBIOSName": {
-        "default": "knod-001",
+        "default": "hnod-001",
         "description": "NetBIOS name of the first WSFC Node (up to 15 characters)",
         "type": "String"
       },
       "ClusterName": {
-        "default": "clskql003",
+        "default": "clskql005",
         "description": "NetBIOS name of the Cluster (up to 15 characters)",
         "type": "String"
       },
