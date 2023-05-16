@@ -175,22 +175,22 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "WSFCNode2PrivateIP3": {
-        "default": "10.49.69.56",
+        "default": "10.49.69.62",
         "description": "Third private IP for Availability Group Listener on first WSFC Node",
         "type": "String"
       },
       "WSFCNode2NetBIOSName": {
-        "default": "slod-002",
+        "default": "hnod-002",
         "description": "NetBIOS name of the second WSFC Node (up to 15 characters)",
         "type": "String"
       },
       "AvailabiltyGroupName": {
-        "default": "AGsnew-1",
+        "default": "AGskka-1",
         "description": "NetBIOS name of the Availablity Group (up to 15 characters)",
         "type": "String"
       },
       "AvailabiltyGroupListenerName": {
-        "default": "AGsnew-L1",
+        "default": "AGskka-L1",
         "description": "NetBIOS name of the Availablity Group (up to 15 characters)",
         "type": "String"
       },
@@ -205,12 +205,12 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "WSFCNode1NetBIOSName": {
-        "default": "slod-001",
+        "default": "hnod-001",
         "description": "NetBIOS name of the first WSFC Node (up to 15 characters)",
         "type": "String"
       },
       "ClusterName": {
-        "default": "clsnew007",
+        "default": "clskql005",
         "description": "NetBIOS name of the Cluster (up to 15 characters)",
         "type": "String"
       },
@@ -220,7 +220,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "WSFCNode1PrivateIP1": {
-        "default": "10.49.69.5",
+        "default": "10.49.69.6",
         "description": "Secondary private IP for WSFC cluster on first WSFC Node",
         "type": "String"
       },
@@ -230,7 +230,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "WSFCNode1PrivateIP3": {
-        "default": "10.49.69.12",
+        "default": "10.49.69.30",
         "description": "Third private IP for Availability Group Listener on first WSFC Node",
         "type": "String"
       },
@@ -260,7 +260,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "WSFCNode2PrivateIP1": {
-        "default": "10.49.69.53",
+        "default": "10.49.69.36",
         "description": "Secondary private IP for WSFC cluster on first WSFC Node",
         "type": "String"
       },
@@ -271,7 +271,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       },
      
       "WSFCNode2PrivateIP2": {
-        "default": "10.49.69.36",
+        "default": "10.49.69.62",
         "description": "Secondary private IP for WSFC cluster on first WSFC Node",
         "type": "String"
       },
@@ -286,7 +286,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "type": "String"
       },
       "StackName": {
-        "default": "kknew",
+        "default": "kkakk",
         "description": "Stack Name Input for cfn resource signal",
         "type": "String"
       },
@@ -409,7 +409,26 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "action": "aws:runCommand",
         "onFailure": "step:sleepend"
       },
-       
+       {
+        "inputs": {
+        "Parameters": {
+          "sourceInfo": "{\"path\": \"https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/adduser.ps1\"}",
+          "sourceType": "S3",
+          "commandLine": "./adduser.ps1 -SQLSecrets {{SQLSecrets}}"
+        },
+        "CloudWatchOutputConfig": {
+          "CloudWatchOutputEnabled": "true",
+          "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+        },
+        "InstanceIds": [
+          "{{wsfcfInstanceIds.InstanceIds}}"
+        ],
+        "DocumentName": "AWS-RunRemoteScript"
+      },
+      "name": "addsqluser",
+      "action": "aws:runCommand",
+      "onFailure": "Abort"
+      },
       {
         "inputs": {
         "Parameters": {
@@ -430,7 +449,26 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       "action": "aws:runCommand",
       "onFailure": "Abort"
       },
-       
+       {
+        "inputs": {
+        "Parameters": {
+          "sourceInfo": "{\"path\": \"https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/updatednsip.ps1\"}",
+          "sourceType": "S3",
+          "commandLine": "./updatednsip.ps1 -DomainDNSServer1 {{DomainDNSServer1}} -DomainDNSServer2 {{DomainDNSServer2}}"
+        },
+        "CloudWatchOutputConfig": {
+          "CloudWatchOutputEnabled": "true",
+          "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+        },
+        "InstanceIds": [
+          "{{wsfcfInstanceIds.InstanceIds}}"
+        ],
+        "DocumentName": "AWS-RunRemoteScript"
+      },
+      "name": "updatednsip",
+      "action": "aws:runCommand",
+      "onFailure": "Abort"
+      },
       {
         "inputs": {
           "Parameters": {
@@ -634,7 +672,48 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "action": "aws:runCommand",
         "onFailure": "step:sleepend"
       },
-     
+      {
+        "inputs": {
+          "Parameters": {
+            "sourceInfo": "{\"path\": \"https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/Install-SQLEE.ps1\"}",
+            "sourceType": "S3",
+            "commandLine": "./Install-SQLEE.ps1 -DomainNetBIOSName {{DomainNetBIOSName}} -DomainDNSName {{DomainDNSName}} -AdminSecret {{AdminSecrets}} -SQLServerVersion {{SQLServerVersion}} -SQLSecret {{SQLSecrets}} -SQLAdminGroup {{SQLAdminGroup}}"
+          },
+          "CloudWatchOutputConfig": {
+            "CloudWatchOutputEnabled": "true",
+            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+          },
+          "InstanceIds": [
+            "{{wsfcNode1InstanceId.InstanceId}}",
+            "{{wsfcNode2InstanceId.InstanceId}}"
+          ],
+          "DocumentName": "AWS-RunRemoteScript"
+        },
+        "name": "2NodeSQLInstallMOF",
+        "action": "aws:runCommand",
+        "onFailure": "step:sleepend"
+      },
+      {
+        "inputs": {
+          "Parameters": {
+            "commands": [
+              "function DscStatusCheck () {\n    $LCMState = (Get-DscLocalConfigurationManager).LCMState\n    if ($LCMState -eq 'PendingConfiguration' -Or $LCMState -eq 'PendingReboot') {\n        'returning 3010, should continue after reboot'\n        exit 3010\n    } else {\n      'Completed'\n    }\n}\n\nStart-DscConfiguration 'C:\\AWSQuickstart\\SQLInstall' -Wait -Verbose -Force\n\nDscStatusCheck\n"
+            ]
+          },
+          "CloudWatchOutputConfig": {
+            "CloudWatchOutputEnabled": "true",
+            "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
+          },
+          "InstanceIds": [
+            "{{wsfcNode1InstanceId.InstanceId}}",
+            "{{wsfcNode2InstanceId.InstanceId}}"
+          ],
+          "DocumentName": "AWS-RunPowerShellScript"
+        },
+        "name": "2NodeSQLInstall",
+        "action": "aws:runCommand",
+        "onFailure": "step:sleepend"
+      },
       {
         "inputs": {
           "Parameters": {
