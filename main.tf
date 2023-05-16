@@ -409,26 +409,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
         "action": "aws:runCommand",
         "onFailure": "step:sleepend"
       },
-       {
-        "inputs": {
-        "Parameters": {
-          "sourceInfo": "{\"path\": \"https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/adduser.ps1\"}",
-          "sourceType": "S3",
-          "commandLine": "./adduser.ps1 -SQLSecrets {{SQLSecrets}}"
-        },
-        "CloudWatchOutputConfig": {
-          "CloudWatchOutputEnabled": "true",
-          "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
-        },
-        "InstanceIds": [
-          "{{wsfcfInstanceIds.InstanceIds}}"
-        ],
-        "DocumentName": "AWS-RunRemoteScript"
-      },
-      "name": "addsqluser",
-      "action": "aws:runCommand",
-      "onFailure": "Abort"
-      },
+       
       {
         "inputs": {
         "Parameters": {
@@ -449,26 +430,7 @@ resource "aws_ssm_document" "aws_quickstart_mssql" {
       "action": "aws:runCommand",
       "onFailure": "Abort"
       },
-       {
-        "inputs": {
-        "Parameters": {
-          "sourceInfo": "{\"path\": \"https://www.kh-static-pri.net.s3.us-west-2.amazonaws.com/updatednsip.ps1\"}",
-          "sourceType": "S3",
-          "commandLine": "./updatednsip.ps1 -DomainDNSServer1 {{DomainDNSServer1}} -DomainDNSServer2 {{DomainDNSServer2}}"
-        },
-        "CloudWatchOutputConfig": {
-          "CloudWatchOutputEnabled": "true",
-          "CloudWatchLogGroupName": "{{CloudwatchLogGroup}}"
-        },
-        "InstanceIds": [
-          "{{wsfcfInstanceIds.InstanceIds}}"
-        ],
-        "DocumentName": "AWS-RunRemoteScript"
-      },
-      "name": "updatednsip",
-      "action": "aws:runCommand",
-      "onFailure": "Abort"
-      },
+       
       {
         "inputs": {
           "Parameters": {
